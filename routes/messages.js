@@ -258,4 +258,23 @@ router.get('/', protect, superAdmin, async (req, res) => {
     }
 });
 
+// @desc    Delete a message
+// @route   DELETE /api/messages/:id
+// @access  Private/SuperAdmin
+router.delete('/:id', protect, superAdmin, async (req, res) => {
+    try {
+        const message = await Message.findById(req.params.id);
+        
+        if (!message) {
+            return res.status(404).json({ message: 'Message not found' });
+        }
+
+        await Message.findByIdAndDelete(req.params.id);
+        res.json({ success: true, message: 'Message deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting message:', error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
+
 module.exports = router;
