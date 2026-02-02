@@ -50,17 +50,17 @@ const generateContactEmailHTML = (name, email, subject, message) => {
                     <table width="100%" cellpadding="0" cellspacing="0" border="0">
                       <tr>
                         <td style="padding:6px 0;color:#71717a;font-size:14px;width:90px;">Name:</td>
-                        <td style="padding:6px 0;color:#ffffff;font-size:14px;font-weight:bold;">{{name}}</td>
+                        <td style="padding:6px 0;color:#ffffff;font-size:14px;font-weight:bold;">${name}</td>
                       </tr>
                       <tr>
                         <td style="padding:6px 0;color:#71717a;font-size:14px;">Email:</td>
                         <td style="padding:6px 0;font-size:14px;">
-                          <a href="mailto:{{email}}" style="color:#dc2626;text-decoration:none;font-weight:bold;">{{email}}</a>
+                          <a href="mailto:${email}" style="color:#dc2626;text-decoration:none;font-weight:bold;">${email}</a>
                         </td>
                       </tr>
                       <tr>
                         <td style="padding:6px 0;color:#71717a;font-size:14px;">Subject:</td>
-                        <td style="padding:6px 0;color:#ffffff;font-size:14px;">{{subject}}</td>
+                        <td style="padding:6px 0;color:#ffffff;font-size:14px;">${subject || 'No Subject'}</td>
                       </tr>
                     </table>
                   </td>
@@ -71,7 +71,7 @@ const generateContactEmailHTML = (name, email, subject, message) => {
                 <tr>
                   <td style="padding:20px;">
                     <h2 style="margin:0 0 15px 0;font-size:16px;color:#dc2626;text-transform:uppercase;border-bottom:1px solid #333;padding-bottom:8px;">Message</h2>
-                    <p style="margin:0;font-size:15px;line-height:1.7;color:#ffffff;white-space:pre-wrap;">{{message}}</p>
+                    <p style="margin:0;font-size:15px;line-height:1.7;color:#ffffff;white-space:pre-wrap;">${message}</p>
                   </td>
                 </tr>
               </table>

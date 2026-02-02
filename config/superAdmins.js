@@ -2,7 +2,7 @@
 // These users have full access to manage admins, edit any profile, and manage all events
 const SUPER_ADMIN_EMAILS = [
     'sunkavalli.veerendra1973@gmail.com',
-    'superadmin2@klu.ac.in',
+    'santoshreed@gmail.com',
     'superadmin3@klu.ac.in'
 ];
 

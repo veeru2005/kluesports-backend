@@ -9,11 +9,31 @@ const { isSuperAdmin } = require('../config/superAdmins');
 // Generate 6-digit OTP
 const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString();
 
-// Helper to generate JWT
+// Helper to generate JWT with session info
 const generateToken = (id) => {
-    return jwt.sign({ id }, process.env.JWT_SECRET, {
-        expiresIn: '30d',
-    });
+    const now = new Date();
+    const loginDate = now.toISOString().split('T')[0]; // YYYY-MM-DD format
+    const loginTimestamp = now.getTime();
+    
+    // Calculate expiration: 6 hours from now OR end of day (whichever is sooner)
+    const sixHoursLater = new Date(now.getTime() + 6 * 60 * 60 * 1000);
+    const endOfDay = new Date(now);
+    endOfDay.setHours(23, 59, 59, 999);
+    
+    const expirationTime = Math.min(sixHoursLater.getTime(), endOfDay.getTime());
+    const expiresInSeconds = Math.floor((expirationTime - now.getTime()) / 1000);
+    
+    return jwt.sign(
+        { 
+            id, 
+            loginDate,
+            loginTimestamp
+        }, 
+        process.env.JWT_SECRET, 
+        {
+            expiresIn: expiresInSeconds,
+        }
+    );
 };
 
 const transporter = nodemailer.createTransport({
