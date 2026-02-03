@@ -6,30 +6,52 @@ const { protect, superAdmin } = require('../middleware/authMiddleware');
 
 // Email transporter configuration
 const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false,
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    }
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false,
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
 });
 
 // Generate HTML email template for contact message
 const generateContactEmailHTML = (name, email, subject, message) => {
-    return `
+  return `
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>New Contact Message - KLU ESPORTS</title>
+  <style>
+    @media only screen and (max-width: 600px) {
+      .main-table {
+        border-radius: 8px !important;
+      }
+      .social-link {
+        margin: 0 2px !important;
+        font-size: 9px !important;
+        white-space: nowrap !important;
+      }
+      .social-icon {
+        width: 12px !important;
+        height: 12px !important;
+        margin-right: 2px !important;
+      }
+      .social-footer {
+        white-space: nowrap !important;
+        padding: 24px 10px !important;
+      }
+    }
+  </style>
 </head>
 <body style="margin:0;padding:0;background-color:#09090b;font-family:Verdana,Arial,sans-serif;color:#ffffff;">
-  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#09090b;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#09090b;">
     <tr>
       <td align="center" style="padding:40px 10px;">
-        <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;background-color:#121212;border:2px solid #dc2626;border-radius:12px;overflow:hidden;box-shadow:0 0 30px rgba(220,38,38,0.35);">
+        <table role="presentation" class="main-table" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;background-color:#121212;border:2px solid #dc2626;border-radius:12px;overflow:hidden;box-shadow:0 0 30px rgba(220,38,38,0.35);">
           
           <tr>
             <td align="center" style="padding:30px;border-bottom:2px solid #dc2626;">
@@ -43,11 +65,11 @@ const generateContactEmailHTML = (name, email, subject, message) => {
 
           <tr>
             <td style="padding:35px 25px;">
-              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#0f0f0f;border:1px solid #dc2626;border-radius:8px;margin-bottom:25px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#0f0f0f;border:1px solid #dc2626;border-radius:8px;margin-bottom:25px;">
                 <tr>
                   <td style="padding:20px;">
                     <h2 style="margin:0 0 15px 0;font-size:16px;color:#dc2626;text-transform:uppercase;border-bottom:1px solid #333;padding-bottom:8px;">Sender Details</h2>
-                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                       <tr>
                         <td style="padding:6px 0;color:#71717a;font-size:14px;width:90px;">Name:</td>
                         <td style="padding:6px 0;color:#ffffff;font-size:14px;font-weight:bold;">${name}</td>
@@ -67,7 +89,7 @@ const generateContactEmailHTML = (name, email, subject, message) => {
                 </tr>
               </table>
 
-              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#0f0f0f;border:1px solid #dc2626;border-radius:8px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#0f0f0f;border:1px solid #dc2626;border-radius:8px;">
                 <tr>
                   <td style="padding:20px;">
                     <h2 style="margin:0 0 15px 0;font-size:16px;color:#dc2626;text-transform:uppercase;border-bottom:1px solid #333;padding-bottom:8px;">Message</h2>
@@ -83,16 +105,19 @@ const generateContactEmailHTML = (name, email, subject, message) => {
           </tr>
 
           <tr>
-            <td align="center" style="padding:24px;background:#0f0f0f;border-top:2px solid #dc2626;">
-              <div style="margin-bottom:18px;">
-                <a href="https://www.instagram.com/klu__esports/" style="margin:0 8px;color:#dc2626;font-size:12px;text-decoration:none;">
-                  <img src="https://cdn-icons-png.flaticon.com/24/174/174855.png" width="16" height="16" style="vertical-align:middle;margin-right:4px;">Instagram
+            <td align="center" class="social-footer" style="padding:24px;background:#0f0f0f;border-top:2px solid #dc2626;">
+              <div style="margin-bottom:15px;white-space:nowrap;">
+                <a href="https://www.instagram.com/klu__esports/" class="social-link" style="margin:0 4px;color:#dc2626;font-size:11px;text-decoration:none;display:inline-block;white-space:nowrap;">
+                  <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="14" height="14" style="vertical-align:middle;margin-right:4px;">Instagram
                 </a>
-                <a href="https://discord.com/invite/pp9wnEjbt" style="margin:0 8px;color:#dc2626;font-size:12px;text-decoration:none;">
-                  <img src="https://cdn-icons-png.flaticon.com/24/5968/5968756.png" width="16" height="16" style="vertical-align:middle;margin-right:4px;">Discord
+                <a href="https://discord.com/invite/pp9wnEjbt" class="social-link" style="margin:0 4px;color:#dc2626;font-size:11px;text-decoration:none;display:inline-block;white-space:nowrap;">
+                  <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/5968/5968756.png" width="14" height="14" style="vertical-align:middle;margin-right:4px;">Discord
                 </a>
-                <a href="https://www.youtube.com/@esports.kluniversity" style="margin:0 8px;color:#dc2626;font-size:12px;text-decoration:none;">
-                  <img src="https://cdn-icons-png.flaticon.com/24/1384/1384060.png" width="16" height="16" style="vertical-align:middle;margin-right:4px;">YouTube
+                <a href="https://www.youtube.com/@esports.kluniversity" class="social-link" style="margin:0 4px;color:#dc2626;font-size:11px;text-decoration:none;display:inline-block;white-space:nowrap;">
+                  <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" width="14" height="14" style="vertical-align:middle;margin-right:4px;">YouTube
+                </a>
+                <a href="https://www.linkedin.com/company/klu-esports/" class="social-link" style="margin:0 4px;color:#dc2626;font-size:11px;text-decoration:none;display:inline-block;white-space:nowrap;">
+                  <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/174/174857.png" width="14" height="14" style="vertical-align:middle;margin-right:4px;">LinkedIn
                 </a>
               </div>
               <p style="margin:8px 0 0 0;font-size:12px;color:#71717a;">© 2026 KLU Esports Club. All rights reserved.</p>
@@ -112,19 +137,45 @@ const generateContactEmailHTML = (name, email, subject, message) => {
 
 // Generate confirmation email HTML for the sender
 const generateConfirmationEmailHTML = (name) => {
-    return `
+  return `
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Message Received - KLU Esports</title>
+    <style>
+      @media only screen and (max-width: 600px) {
+        .main-table {
+          border-radius: 8px !important;
+        }
+        .social-link {
+          margin: 0 2px !important;
+          font-size: 9px !important;
+          white-space: nowrap !important;
+        }
+        .social-icon {
+          width: 12px !important;
+          height: 12px !important;
+          margin-right: 2px !important;
+        }
+        .social-footer {
+          white-space: nowrap !important;
+          padding: 24px 10px !important;
+        }
+        .greeting-text {
+          line-height: 1.4 !important;
+          margin: 0 0 20px 0 !important;
+        }
+      }
+    </style>
 </head>
-<body style="margin: 0; padding: 0; font-family: 'Verdana', sans-serif; background-color: #09090b; color: #ffffff;">
+<body style="margin: 0; padding: 0; font-family: 'Verdana',Arial,sans-serif; background-color: #09090b; color: #ffffff;">
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center" style="padding: 40px 0;">
-                <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" 
+                <table role="presentation" class="main-table" width="600" cellspacing="0" cellpadding="0" border="0" 
                     style="background-color: #121212; 
                            border: 2px solid #dc2626; 
                            border-radius: 12px; 
@@ -147,9 +198,8 @@ const generateConfirmationEmailHTML = (name) => {
                             
                             <h2 style="color: #ffffff; font-size: 22px; margin: 0 0 15px 0;">📬 Message Received!</h2>
                             
-                            <p style="color: #ffffff; font-size: 16px; line-height: 1.6; margin: 0 0 25px 0;">
-                                Hey <span style="color: #dc2626; font-weight: bold;">${name}</span>,<br><br>
-                                Thank you for reaching out to KLU ESPORTS! We've received your message and our team will get back to you as soon as possible.
+                            <p class="greeting-text" style="color: #ffffff; font-size: 16px; line-height: 1.6; margin: 0 0 25px 0;">
+                                Hey <span style="color: #dc2626; font-weight: bold;">${name}</span>, Thank you for reaching out to KLU ESPORTS! We've received your message and our team will get back to you as soon as possible.
                             </p>
                             
                             <div style="background: linear-gradient(145deg, #1a1a1a, #0a0a0a); border: 1px solid #dc2626; border-radius: 8px; padding: 20px; margin-bottom: 25px;">
@@ -165,20 +215,23 @@ const generateConfirmationEmailHTML = (name) => {
                     </tr>
 
                     <tr>
-                        <td align="center" style="padding: 24px; background-color: #0f0f0f; border-top: 2px solid #dc2626;">
-                           <div style="margin-bottom: 10px;">
-                                <a href="https://www.instagram.com/klu__esports/" style="margin: 0 10px; text-decoration: none; display: inline-block; color: #dc2626; font-size: 12px;">
-                                    <img src="https://cdn-icons-png.flaticon.com/24/174/174855.png" alt="Instagram" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 4px;">Instagram
+                        <td align="center" class="social-footer" style="padding: 24px; background-color: #0f0f0f; border-top: 2px solid #dc2626;">
+                           <div style="margin-bottom: 10px;white-space:nowrap;">
+                                <a href="https://www.instagram.com/klu__esports/" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626; font-size: 11px;white-space:nowrap;">
+                                    <img class="social-icon" src="https://cdn-icons-png.flaticon.com/128/174/174855.png" alt="Instagram" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;">Instagram
                                 </a>
-                                <a href="https://discord.com/invite/pp9wnEjbt" style="margin: 0 10px; text-decoration: none; display: inline-block; color: #dc2626; font-size: 12px;">
-                                    <img src="https://cdn-icons-png.flaticon.com/24/5968/5968756.png" alt="Discord" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 4px;">Discord
+                                <a href="https://discord.com/invite/pp9wnEjbt" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626; font-size: 11px;white-space:nowrap;">
+                                    <img class="social-icon" src="https://cdn-icons-png.flaticon.com/128/5968/5968756.png" alt="Discord" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;">Discord
                                 </a>
-                                <a href="https://www.youtube.com/@esports.kluniversity" style="margin: 0 10px; text-decoration: none; display: inline-block; color: #dc2626; font-size: 12px;">
-                                    <img src="https://cdn-icons-png.flaticon.com/24/1384/1384060.png" alt="YouTube" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 4px;">YouTube
+                                <a href="https://www.youtube.com/@esports.kluniversity" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626; font-size: 11px;white-space:nowrap;">
+                                    <img class="social-icon" src="https://cdn-icons-png.flaticon.com/128/1384/1384060.png" alt="YouTube" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;">YouTube
+                                </a>
+                                <a href="https://www.linkedin.com/company/kl-esports-club" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626; font-size: 11px;white-space:nowrap;">
+                                    <img class="social-icon" src="https://cdn-icons-png.flaticon.com/128/174/174857.png" alt="LinkedIn" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;">LinkedIn
                                 </a>
                             </div>
-                            <p style="color: #71717a; font-size: 12px; margin: 24px 0 0 0;">© 2026 KLU Esports Club. All rights reserved.</p>
-                            <p style="color: #71717a; font-size: 11px; margin: 10px 0;">Designed and Developed by <span style="color: #dc2626;">S. Veerendra Chowdary</span></p>
+                            <p style="color: #71717a; font-size: 12px; margin: 15px 0 0 0;">© 2026 KLU Esports Club. All rights reserved.</p>
+                            <p style="color: #71717a; font-size: 10px; margin: 10px 0;white-space:nowrap;">Designed and Developed by <span style="color: #dc2626;">S. Veerendra Chowdary</span></p>
                         </td>
                     </tr>
                 </table>
@@ -195,86 +248,86 @@ const generateConfirmationEmailHTML = (name) => {
 // @route   POST /api/messages
 // @access  Public
 router.post('/', async (req, res) => {
-    try {
-        const { name, email, subject, message } = req.body;
+  try {
+    const { name, email, subject, message } = req.body;
 
-        // Validate required fields
-        if (!name || !email || !message) {
-            return res.status(400).json({ message: 'Name, email, and message are required' });
-        }
-
-        // Save message to database
-        const newMessage = new Message({
-            name,
-            email,
-            subject,
-            message
-        });
-
-        const createdMessage = await newMessage.save();
-
-        // Send email to admin
-        const adminMailOptions = {
-            from: `"KLU Esports Contact" <${process.env.EMAIL_USER}>`,
-            to: process.env.EMAIL_USER, // Send to the admin email
-            subject: `New Contact Message: ${subject || 'No Subject'} - from ${name}`,
-            html: generateContactEmailHTML(name, email, subject, message)
-        };
-
-        // Send confirmation email to the sender
-        const confirmationMailOptions = {
-            from: `"KLU Esports" <${process.env.EMAIL_USER}>`,
-            to: email,
-            subject: 'We received your message! - KLU Esports',
-            html: generateConfirmationEmailHTML(name)
-        };
-
-        // Send both emails
-        await Promise.all([
-            transporter.sendMail(adminMailOptions),
-            transporter.sendMail(confirmationMailOptions)
-        ]);
-
-        res.status(201).json({ 
-            success: true,
-            message: 'Message sent successfully! We will get back to you soon.',
-            data: createdMessage 
-        });
-    } catch (error) {
-        console.error('Error sending message:', error);
-        res.status(500).json({ message: 'Failed to send message. Please try again later.' });
+    // Validate required fields
+    if (!name || !email || !message) {
+      return res.status(400).json({ message: 'Name, email, and message are required' });
     }
+
+    // Save message to database
+    const newMessage = new Message({
+      name,
+      email,
+      subject,
+      message
+    });
+
+    const createdMessage = await newMessage.save();
+
+    // Send email to admin
+    const adminMailOptions = {
+      from: `"KLU Esports Contact" <${process.env.EMAIL_USER}>`,
+      to: process.env.EMAIL_USER, // Send to the admin email
+      subject: `New Contact Message: ${subject || 'No Subject'} - from ${name}`,
+      html: generateContactEmailHTML(name, email, subject, message)
+    };
+
+    // Send confirmation email to the sender
+    const confirmationMailOptions = {
+      from: `"KLU Esports" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: 'We received your message! - KLU Esports',
+      html: generateConfirmationEmailHTML(name)
+    };
+
+    // Send both emails
+    await Promise.all([
+      transporter.sendMail(adminMailOptions),
+      transporter.sendMail(confirmationMailOptions)
+    ]);
+
+    res.status(201).json({
+      success: true,
+      message: 'Message sent successfully! We will get back to you soon.',
+      data: createdMessage
+    });
+  } catch (error) {
+    console.error('Error sending message:', error);
+    res.status(500).json({ message: 'Failed to send message. Please try again later.' });
+  }
 });
 
 // @desc    Get all messages
 // @route   GET /api/messages
 // @access  Private/SuperAdmin
 router.get('/', protect, superAdmin, async (req, res) => {
-    try {
-        const messages = await Message.find({}).sort({ createdAt: -1 });
-        res.json(messages);
-    } catch (error) {
-        res.status(500).json({ message: 'Server Error' });
-    }
+  try {
+    const messages = await Message.find({}).sort({ createdAt: -1 });
+    res.json(messages);
+  } catch (error) {
+    res.status(500).json({ message: 'Server Error' });
+  }
 });
 
 // @desc    Delete a message
 // @route   DELETE /api/messages/:id
 // @access  Private/SuperAdmin
 router.delete('/:id', protect, superAdmin, async (req, res) => {
-    try {
-        const message = await Message.findById(req.params.id);
-        
-        if (!message) {
-            return res.status(404).json({ message: 'Message not found' });
-        }
+  try {
+    const message = await Message.findById(req.params.id);
 
-        await Message.findByIdAndDelete(req.params.id);
-        res.json({ success: true, message: 'Message deleted successfully' });
-    } catch (error) {
-        console.error('Error deleting message:', error);
-        res.status(500).json({ message: 'Server Error' });
+    if (!message) {
+      return res.status(404).json({ message: 'Message not found' });
     }
+
+    await Message.findByIdAndDelete(req.params.id);
+    res.json({ success: true, message: 'Message deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting message:', error);
+    res.status(500).json({ message: 'Server Error' });
+  }
 });
 
 module.exports = router;
