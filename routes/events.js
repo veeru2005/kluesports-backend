@@ -51,7 +51,6 @@ router.post('/', protect, admin, async (req, res) => {
         const createdEvent = await event.save();
         res.status(201).json(createdEvent);
     } catch (error) {
-        console.error('Error creating event:', error);
         res.status(500).json({ message: 'Server Error' });
     }
 });
@@ -78,7 +77,6 @@ router.put('/:id', protect, admin, async (req, res) => {
             res.status(404).json({ message: 'Event not found' });
         }
     } catch (error) {
-        console.error('Error updating event:', error);
         res.status(500).json({ message: 'Server Error' });
     }
 });

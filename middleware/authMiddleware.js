@@ -12,38 +12,38 @@ const protect = async (req, res, next) => {
             token = req.headers.authorization.split(' ')[1];
 
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            
+
             // Additional validation: Check if session is from today and within 6 hours
             const now = new Date();
             const currentDate = now.toISOString().split('T')[0]; // YYYY-MM-DD
             const currentTime = now.getTime();
-            
+
             // Check if login date matches current date
             if (decoded.loginDate !== currentDate) {
-                return res.status(401).json({ 
-                    success: false, 
+                return res.status(401).json({
+                    success: false,
                     message: 'Session expired. Please login again.',
                     sessionExpired: true
                 });
             }
-            
+
             // Check if session is within 6 hours
             const timeDiff = currentTime - decoded.loginTimestamp;
             const sixHoursInMs = 6 * 60 * 60 * 1000;
-            
+
             if (timeDiff > sixHoursInMs) {
-                return res.status(401).json({ 
-                    success: false, 
+                return res.status(401).json({
+                    success: false,
                     message: 'Session expired. Please login again.',
                     sessionExpired: true
                 });
             }
 
             req.user = await User.findById(decoded.id).select('-password');
-            
+
             if (!req.user) {
-                return res.status(401).json({ 
-                    success: false, 
+                return res.status(401).json({
+                    success: false,
                     message: 'User not found',
                     sessionExpired: true
                 });
@@ -51,10 +51,9 @@ const protect = async (req, res, next) => {
 
             next();
         } catch (error) {
-            console.error('Auth error:', error);
             if (error.name === 'TokenExpiredError') {
-                return res.status(401).json({ 
-                    success: false, 
+                return res.status(401).json({
+                    success: false,
                     message: 'Session expired. Please login again.',
                     sessionExpired: true
                 });

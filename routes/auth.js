@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcryptjs');
 const { isSuperAdmin } = require('../config/superAdmins');
+const { protect } = require('../middleware/authMiddleware');
 
 // Generate 6-digit OTP
 const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString();
@@ -265,7 +266,6 @@ router.post('/otp/send', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Error sending OTP:', error);
     res.status(500).json({ success: false, message: 'Server error sending OTP' });
   }
 });
@@ -371,13 +371,130 @@ router.post('/otp/verify', async (req, res) => {
         collegeId: user.collegeId,
         mobile: user.mobile,
         gameYouPlay: user.gameYouPlay,
-        bio: user.bio
+        bio: user.bio,
+        createdAt: user.createdAt
       }
     });
 
   } catch (error) {
-    console.error('Error verifying OTP:', error);
     res.status(500).json({ success: false, message: 'Server error verifying OTP' });
+  }
+});
+
+// --- New Routes for Self-Service Email/Password Updates ---
+
+// POST /api/auth/otp/send-change-email (for logged-in users)
+router.post('/otp/send-change-email', protect, async (req, res) => {
+  try {
+    const { newEmail } = req.body;
+    if (!newEmail) return res.status(400).json({ success: false, message: 'New email is required' });
+
+    // Check if new email is already taken
+    const existingUser = await User.findOne({ email: newEmail });
+    if (existingUser) return res.status(400).json({ success: false, message: 'Email already in use' });
+
+    const otp = generateOTP();
+    const otpExpires = new Date(Date.now() + 5 * 60 * 1000);
+
+    const user = await User.findById(req.user._id);
+    user.otp = otp;
+    user.otpExpires = otpExpires;
+    await user.save();
+
+    // Send to NEW email
+    const mailOptions = {
+      from: `"KLU Esports" <${process.env.EMAIL_USER}>`,
+      to: newEmail,
+      subject: 'KLU Esports - Email Change Verification OTP',
+      html: `
+        <div style="background-color:#09090b; color:#ffffff; padding:40px; font-family:sans-serif; text-align:center; border:2px solid #dc2626; border-radius:12px;">
+          <h1 style="color:#ffffff;">KLU <span style="color:#dc2626;">ESPORTS</span></h1>
+          <p style="font-size:16px;">You requested to change your email to this address. Use the OTP below to verify ownership:</p>
+          <div style="background:#121212; border:1px solid #dc2626; padding:20px; font-size:32px; letter-spacing:8px; display:inline-block; margin:20px 0; border-radius:8px;">${otp}</div>
+          <p style="color:#a1a1aa; font-size:13px;">This code expires in 5 minutes. If you did not request this, please ignore this email.</p>
+        </div>
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+    res.json({ success: true, message: 'OTP sent to new email' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// POST /api/auth/otp/verify-change-email
+router.post('/otp/verify-change-email', protect, async (req, res) => {
+  try {
+    const { otp, newEmail } = req.body;
+    const user = await User.findById(req.user._id);
+
+    if (!user.otp || user.otp !== otp || new Date() > user.otpExpires) {
+      return res.status(400).json({ success: false, message: 'Invalid or expired OTP' });
+    }
+
+    user.email = newEmail;
+    user.otp = undefined;
+    user.otpExpires = undefined;
+    await user.save();
+
+    res.json({ success: true, message: 'Email updated successfully', newEmail: user.email });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// POST /api/auth/otp/send-reset-password
+router.post('/otp/send-reset-password', protect, async (req, res) => {
+  try {
+    const otp = generateOTP();
+    const otpExpires = new Date(Date.now() + 5 * 60 * 1000);
+
+    const user = await User.findById(req.user._id);
+    user.otp = otp;
+    user.otpExpires = otpExpires;
+    await user.save();
+
+    const mailOptions = {
+      from: `"KLU Esports" <${process.env.EMAIL_USER}>`,
+      to: user.email,
+      subject: 'KLU Esports - Password Change Request OTP',
+      html: `
+        <div style="background-color:#09090b; color:#ffffff; padding:40px; font-family:sans-serif; text-align:center; border:2px solid #dc2626; border-radius:12px;">
+          <h1 style="color:#ffffff;">KLU <span style="color:#dc2626;">ESPORTS</span></h1>
+          <p style="font-size:16px;">You requested to reset your password. Use the OTP below to proceed:</p>
+          <div style="background:#121212; border:1px solid #dc2626; padding:20px; font-size:32px; letter-spacing:8px; display:inline-block; margin:20px 0; border-radius:8px;">${otp}</div>
+          <p style="color:#a1a1aa; font-size:13px;">This code expires in 5 minutes.</p>
+        </div>
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+    res.json({ success: true, message: 'OTP sent to your email' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// POST /api/auth/otp/verify-reset-password
+router.post('/otp/verify-reset-password', protect, async (req, res) => {
+  try {
+    const { otp, newPassword } = req.body;
+    const user = await User.findById(req.user._id);
+
+    if (!user.otp || user.otp !== otp || new Date() > user.otpExpires) {
+      return res.status(400).json({ success: false, message: 'Invalid or expired OTP' });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(newPassword, salt);
+    user.otp = undefined;
+    user.otpExpires = undefined;
+    await user.save();
+
+    res.json({ success: true, message: 'Password updated successfully' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 

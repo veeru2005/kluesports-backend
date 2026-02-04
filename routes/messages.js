@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Message = require('../models/Message');
 const nodemailer = require('nodemailer');
-const { protect, superAdmin } = require('../middleware/authMiddleware');
+const { protect, admin, superAdmin } = require('../middleware/authMiddleware');
 
 // Email transporter configuration
 const transporter = nodemailer.createTransport({
@@ -301,8 +301,8 @@ router.post('/', async (req, res) => {
 
 // @desc    Get all messages
 // @route   GET /api/messages
-// @access  Private/SuperAdmin
-router.get('/', protect, superAdmin, async (req, res) => {
+// @access  Private/Admin
+router.get('/', protect, admin, async (req, res) => {
   try {
     const messages = await Message.find({}).sort({ createdAt: -1 });
     res.json(messages);
@@ -325,7 +325,6 @@ router.delete('/:id', protect, superAdmin, async (req, res) => {
     await Message.findByIdAndDelete(req.params.id);
     res.json({ success: true, message: 'Message deleted successfully' });
   } catch (error) {
-    console.error('Error deleting message:', error);
     res.status(500).json({ message: 'Server Error' });
   }
 });

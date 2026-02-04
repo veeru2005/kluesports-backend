@@ -6,8 +6,8 @@ const { protect, superAdmin, admin } = require('../middleware/authMiddleware');
 
 // @desc    Get all users
 // @route   GET /api/users
-// @access  Private/SuperAdmin
-router.get('/', protect, superAdmin, async (req, res) => {
+// @access  Private/Admin
+router.get('/', protect, admin, async (req, res) => {
     try {
         const users = await User.find({}).select('-password');
         res.json(users);
@@ -40,6 +40,50 @@ router.get('/:id', protect, superAdmin, async (req, res) => {
         const user = await User.findById(req.params.id).select('-password');
         if (user) {
             res.json(user);
+        } else {
+            res.status(404).json({ message: 'User not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
+
+// @desc    Update user profile
+// @route   PUT /api/users/profile
+// @access  Private
+router.put('/profile', protect, async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+
+        if (user) {
+            user.name = req.body.full_name || user.name;
+            user.username = req.body.username || user.username;
+            user.inGameName = req.body.inGameName || user.inGameName;
+            user.collegeId = req.body.collegeId || user.collegeId;
+            user.mobile = req.body.mobile || user.mobile;
+            user.bio = req.body.bio || user.bio;
+            user.gameYouPlay = req.body.gameYouPlay || user.gameYouPlay;
+
+            if (req.body.email) {
+                user.email = req.body.email;
+            }
+
+            const updatedUser = await user.save();
+            res.json({
+                success: true,
+                user: {
+                    id: updatedUser._id,
+                    name: updatedUser.name,
+                    username: updatedUser.username,
+                    email: updatedUser.email,
+                    role: updatedUser.role,
+                    collegeId: updatedUser.collegeId,
+                    mobile: updatedUser.mobile,
+                    bio: updatedUser.bio,
+                    gameYouPlay: updatedUser.gameYouPlay,
+                    createdAt: updatedUser.createdAt
+                }
+            });
         } else {
             res.status(404).json({ message: 'User not found' });
         }
@@ -86,15 +130,14 @@ router.put('/:id', protect, superAdmin, async (req, res) => {
             res.status(404).json({ message: 'User not found' });
         }
     } catch (error) {
-        console.error('Error updating user:', error);
         res.status(500).json({ message: 'Server Error' });
     }
 });
 
 // @desc    Delete a user/member
 // @route   DELETE /api/users/:id
-// @access  Private/SuperAdmin
-router.delete('/:id', protect, superAdmin, async (req, res) => {
+// @access  Private/Admin
+router.delete('/:id', protect, admin, async (req, res) => {
     try {
         const user = await User.findById(req.params.id);
 
@@ -102,6 +145,19 @@ router.delete('/:id', protect, superAdmin, async (req, res) => {
             // Prevent deleting self
             if (user._id.toString() === req.user._id.toString()) {
                 return res.status(400).json({ message: 'Cannot delete your own account' });
+            }
+
+            // If not super admin, check if they are an admin of the user's game
+            if (req.user.role !== 'super_admin') {
+                const adminGame = req.user.game;
+                const userGame = user.gameYouPlay || user.game;
+
+                if (adminGame !== userGame) {
+                    return res.status(403).json({
+                        success: false,
+                        message: 'Not authorized to delete members from other games'
+                    });
+                }
             }
 
             await user.deleteOne();
@@ -158,7 +214,6 @@ router.post('/admins', protect, superAdmin, async (req, res) => {
             game: admin.game
         });
     } catch (error) {
-        console.error('Error creating admin:', error);
         res.status(500).json({ message: 'Server Error' });
     }
 });
@@ -198,7 +253,34 @@ router.put('/admins/:id', protect, superAdmin, async (req, res) => {
             res.status(404).json({ message: 'Admin not found' });
         }
     } catch (error) {
-        console.error('Error updating admin:', error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
+
+// @desc    Change a user's played game (Super Admin)
+// @route   PATCH /api/users/:id/game
+// @access  Private/SuperAdmin
+router.patch('/:id/game', protect, superAdmin, async (req, res) => {
+    try {
+        const { gameYouPlay } = req.body;
+
+        const validGames = ['Free Fire', 'BGMI', 'Valorant', 'Call Of Duty'];
+
+        if (!gameYouPlay || !validGames.includes(gameYouPlay)) {
+            return res.status(400).json({ success: false, message: 'Invalid or missing gameYouPlay value' });
+        }
+
+        const user = await User.findById(req.params.id);
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        user.gameYouPlay = gameYouPlay;
+        await user.save();
+
+        res.json({ success: true, id: user._id, gameYouPlay: user.gameYouPlay });
+    } catch (error) {
         res.status(500).json({ message: 'Server Error' });
     }
 });
