@@ -52,6 +52,19 @@ const userSchema = new mongoose.Schema({
     },
     lastLogin: {
         type: Date
+    },
+    bio: {
+        type: String,
+        default: "I am a Gamer"
+    },
+    tempEmail: { // For pending email change
+        type: String,
+        trim: true,
+        lowercase: true
+    },
+    isEmailChangeAuthorized: { // Flag to track if current email has authorized the change
+        type: Boolean,
+        default: false
     }
 }, {
     timestamps: true

@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 5005;
 
 // Middleware
 app.use(cors({
-    origin: ['http://localhost:5173', 'http://127.0.0.1:5173'], // Allow frontend
+    origin: ['http://localhost:5173', 'https://kluesports.in'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
@@ -27,11 +27,13 @@ const authRoutes = require('./routes/auth');
 const eventRoutes = require('./routes/events');
 const messageRoutes = require('./routes/messages');
 const userRoutes = require('./routes/users');
+const uploadRoutes = require('./routes/upload');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/upload', uploadRoutes);
 
 app.get('/', (req, res) => {
     res.send('API is running...');

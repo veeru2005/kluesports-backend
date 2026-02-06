@@ -36,12 +36,13 @@ router.get('/:id', async (req, res) => {
 // @access  Private/Admin or SuperAdmin
 router.post('/', protect, admin, async (req, res) => {
     try {
-        const { title, description, event_date, location, game, max_participants, image_url } = req.body;
+        const { title, description, event_date, end_time, location, game, max_participants, image_url } = req.body;
 
         const event = new Event({
             title,
             description,
             event_date,
+            end_time,
             location,
             game,
             max_participants,
@@ -66,6 +67,7 @@ router.put('/:id', protect, admin, async (req, res) => {
             event.title = req.body.title || event.title;
             event.description = req.body.description || event.description;
             event.event_date = req.body.event_date || event.event_date;
+            event.end_time = req.body.end_time || event.end_time;
             event.location = req.body.location || event.location;
             event.game = req.body.game || event.game;
             event.max_participants = req.body.max_participants || event.max_participants;

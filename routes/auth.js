@@ -7,6 +7,157 @@ const bcrypt = require('bcryptjs');
 const { isSuperAdmin } = require('../config/superAdmins');
 const { protect } = require('../middleware/authMiddleware');
 
+// Enhanced email template with type indicators
+const getRichEmailTemplate = (title, message, otp, footerNote = "This code expires in 5 minutes.", emailType = "general") => {
+  // Define type-specific styling and badges
+  const typeConfig = {
+    'email-change-verify': {
+      badge: '📧 Email Change - Step 1',
+      badgeColor: '#f97316', // Orange
+      icon: '🔐',
+      contextBox: `
+        <div style="background:#7c2d12;border-left:4px solid #f97316;padding:12px 15px;margin:20px auto;max-width:90%;border-radius:6px;">
+          <p style="margin:0;color:#fdba74;font-size:13px;font-weight:bold;">📋 Email Change Details:</p>
+          <p style="margin:5px 0 0 0;color:#fed7aa;font-size:12px;">Step 1: Verifying your current email address</p>
+          <p style="margin:5px 0 0 0;color:#fef08a;font-size:11px;">⚠️ If you didn't request this, contact support immediately.</p>
+        </div>
+      `
+    },
+    'email-change-new': {
+      badge: '✅ Email Change - Step 2',
+      badgeColor: '#10b981', // Green
+      icon: '✉️',
+      contextBox: `
+        <div style="background:#064e3b;border-left:4px solid #10b981;padding:12px 15px;margin:20px auto;max-width:90%;border-radius:6px;">
+          <p style="margin:0;color:#86efac;font-size:13px;font-weight:bold;">✅ Step 1 Complete!</p>
+          <p style="margin:5px 0 0 0;color:#d1fae5;font-size:12px;">Now verifying your new email address</p>
+          <p style="margin:5px 0 0 0;color:#fef08a;font-size:11px;">🔒 Final step to complete your email change</p>
+        </div>
+      `
+    },
+    'password-reset': {
+      badge: '🔒 Password Reset',
+      badgeColor: '#ef4444', // Red
+      icon: '🔑',
+      contextBox: `
+        <div style="background:#7f1d1d;border-left:4px solid #ef4444;padding:12px 15px;margin:20px auto;max-width:90%;border-radius:6px;">
+          <p style="margin:0;color:#fca5a5;font-size:13px;font-weight:bold;">🔐 Password Reset Request</p>
+          <p style="margin:5px 0 0 0;color:#fecaca;font-size:12px;">Use this OTP to verify and set a new password</p>
+          <p style="margin:5px 0 0 0;color:#fef08a;font-size:11px;">⚠️ If you didn't request this, secure your account now.</p>
+        </div>
+      `
+    },
+    'general': {
+      badge: '🎮 KLU ESPORTS',
+      badgeColor: '#dc2626',
+      icon: '🔒',
+      contextBox: ''
+    }
+  };
+
+  const config = typeConfig[emailType] || typeConfig['general'];
+
+  return `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KLU ESPORTS OTP</title>
+  <style>
+    @media only screen and (max-width: 600px) {
+      .main-table { width: 100% !important; border-radius: 8px !important; }
+      .header-cell { padding: 20px 15px !important; }
+      .body-cell { padding: 30px 15px !important; }
+      .otp-text { font-size: 28px !important; letter-spacing: 4px !important; padding: 15px 10px !important; }
+      .footer-cell { padding: 20px 10px !important; }
+      .social-links { display: block !important; white-space: nowrap !important; }
+      .social-link { display: inline-block !important; margin: 0 2px !important; font-size: 9px !important; white-space: nowrap !important; }
+      .logo-img { width: 70px !important; height: 70px !important; }
+      .title-text { font-size: 22px !important; }
+      .social-icon { width: 12px !important; height: 12px !important; margin-right: 2px !important; }
+      .type-badge { font-size: 11px !important; padding: 6px 12px !important; }
+    }
+  </style>
+</head>
+<body style="margin:0;padding:0;background-color:#09090b;font-family:Verdana,Arial,sans-serif;color:#ffffff;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#09090b;">
+    <tr>
+      <td align="center" style="padding:20px 10px;">
+        <table role="presentation" class="main-table" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background-color:#121212;border:2px solid #dc2626;border-radius:12px;overflow:hidden;box-shadow:0 0 30px rgba(220,38,38,0.4);">
+          <!-- TYPE BADGE -->
+          <tr>
+            <td align="center" style="padding:15px 15px 0 15px;">
+              <div class="type-badge" style="display:inline-block;background:${config.badgeColor};color:#ffffff;padding:8px 16px;border-radius:20px;font-size:12px;font-weight:bold;letter-spacing:0.5px;box-shadow:0 2px 8px rgba(0,0,0,0.3);">
+                ${config.badge}
+              </div>
+            </td>
+          </tr>
+          <!-- HEADER -->
+          <tr>
+            <td class="header-cell" align="center" style="padding:20px 30px 30px 30px;border-bottom:2px solid #dc2626;">
+              <img class="logo-img" src="https://res.cloudinary.com/dus3luhur/image/upload/v1769977067/Logo1_xdqj6d.png" width="80" height="80" alt="KLU ESPORTS" style="display:block;border-radius:50%;border:2px solid #dc2626;margin:0 auto 15px auto;">
+              <h1 class="title-text" style="margin:0;font-size:24px;letter-spacing:1px;color:#ffffff;">
+                KLU <span style="color:#dc2626;">ESPORTS</span>
+              </h1>
+            </td>
+          </tr>
+          <!-- BODY -->
+          <tr>
+            <td class="body-cell" align="center" style="padding:40px 25px;">
+              <p style="color:#ffffff;font-size:16px;line-height:1.6;margin:0 0 20px 0;padding:0 10px;text-align:center;">
+                ${message}
+              </p>
+              ${config.contextBox}
+              <!-- OTP BOX -->
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:20px auto 30px auto;max-width:100%;">
+                <tr>
+                  <td align="center" style="background:linear-gradient(145deg, #1a1a1a, #0a0a0a);border:2px solid #dc2626;border-radius:8px;padding:18px 20px;">
+                    <span class="otp-text" style="color:#ffffff;font-size:36px;font-weight:bold;letter-spacing:8px;font-family:'Courier New',monospace;text-shadow:0 0 20px rgba(220,38,38,0.3);display:block;word-break:break-all;">${otp}</span>
+                  </td>
+                </tr>
+              </table>
+              <p style="color:#ffffff;font-size:14px;margin:0 0 5px 0;padding:0 10px;text-align:center;">
+                Do not share this code with anyone.
+              </p>
+              <p style="color:#a1a1aa;font-size:13px;margin:0;padding:0 10px;text-align:center;">
+                ${footerNote}
+              </p>
+            </td>
+          </tr>
+          <!-- FOOTER -->
+          <tr>
+            <td class="footer-cell" align="center" style="padding:24px 15px;background:#0f0f0f;border-top:2px solid #dc2626;">
+               <div style="margin-bottom: 10px;white-space:nowrap;">
+                  <a href="https://www.instagram.com/klu__esports/" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626; font-size: 11px;white-space:nowrap;">
+                      <img class="social-icon" src="https://cdn-icons-png.flaticon.com/128/174/174855.png" alt="Instagram" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;">Instagram
+                  </a>
+                  <span style="color:#71717a;">|</span>
+                  <a href="https://discord.com/invite/pp9wnEjbt" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626; font-size: 11px;white-space:nowrap;">
+                      <img class="social-icon" src="https://cdn-icons-png.flaticon.com/128/5968/5968756.png" alt="Discord" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;">Discord
+                  </a>
+                  <span style="color:#71717a;">|</span>
+                  <a href="https://www.youtube.com/@esports.kluniversity" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626; font-size: 11px;white-space:nowrap;">
+                      <img class="social-icon" src="https://cdn-icons-png.flaticon.com/128/1384/1384060.png" alt="YouTube" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;">YouTube
+                  </a>
+                  <span style="color:#71717a;">|</span>
+                  <a href="https://www.linkedin.com/company/kl-esports-club" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626; font-size: 11px;white-space:nowrap;">
+                      <img class="social-icon" src="https://cdn-icons-png.flaticon.com/128/174/174857.png" alt="LinkedIn" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;">LinkedIn
+                  </a>
+              </div>
+              <p style="color:#71717a;font-size:12px;margin:15px 0 0 0;padding:0 10px;line-height:1.5;">© 2026 KLU Esports Club. All rights reserved.</p>
+              <p style="color:#71717a;font-size:10px;margin:8px 0 0 0;padding:0 10px;line-height:1.5;white-space:nowrap;">Designed and Developed by <span style="color:#dc2626;">S. Veerendra Chowdary</span></p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+`;
+};
+
 // Generate 6-digit OTP
 const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString();
 
@@ -108,153 +259,16 @@ router.post('/otp/send', async (req, res) => {
 
     // Send Email if identifier is an email address
     if (identifier.includes('@')) {
-      const htmlContent = `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>KLU Esports OTP</title>
-  <style>
-    @media only screen and (max-width: 600px) {
-      .main-table {
-        width: 100% !important;
-        border-radius: 8px !important;
-      }
-      .header-cell {
-        padding: 20px 15px !important;
-      }
-      .body-cell {
-        padding: 30px 15px !important;
-      }
-      .otp-text {
-        font-size: 28px !important;
-        letter-spacing: 4px !important;
-        padding: 15px 10px !important;
-      }
-      .footer-cell {
-        padding: 20px 10px !important;
-      }
-      .social-links {
-        display: block !important;
-        white-space: nowrap !important;
-      }
-      .social-link {
-        display: inline-block !important;
-        margin: 0 2px !important;
-        font-size: 9px !important;
-        white-space: nowrap !important;
-      }
-      .social-icon {
-        width: 12px !important;
-        height: 12px !important;
-        margin-right: 2px !important;
-      }
-      .main-text {
-        font-size: 15px !important;
-      }
-      .logo-img {
-        width: 70px !important;
-        height: 70px !important;
-      }
-      .title-text {
-        font-size: 22px !important;
-      }
-    }
-  </style>
-</head>
-<body style="margin:0;padding:0;background-color:#09090b;font-family:Verdana,Arial,sans-serif;color:#ffffff;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#09090b;">
-    <tr>
-      <td align="center" style="padding:20px 10px;">
-
-        <table role="presentation" class="main-table" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background-color:#121212;border:2px solid #dc2626;border-radius:12px;overflow:hidden;box-shadow:0 0 30px rgba(220,38,38,0.4);">
-          
-          <!-- HEADER -->
-          <tr>
-            <td class="header-cell" align="center" style="padding:30px;border-bottom:2px solid #dc2626;">
-              <img class="logo-img" src="https://res.cloudinary.com/dus3luhur/image/upload/v1769972273/KLU-Esports-2_ea6avf.png" width="80" height="80" alt="KLU Esports" style="display:block;border-radius:50%;border:2px solid #dc2626;margin:0 auto 15px auto;">
-              <h1 class="title-text" style="margin:0;font-size:24px;letter-spacing:1px;color:#ffffff;">
-                KLU <span style="color:#dc2626;">ESPORTS</span>
-              </h1>
-            </td>
-          </tr>
-
-          <!-- BODY -->
-          <tr>
-            <td class="body-cell" align="center" style="padding:40px 25px;">
-              
-              <p class="main-text" style="color:#ffffff;font-size:16px;line-height:1.6;margin:0 0 30px 0;padding:0 10px;">
-                Use the One-Time Password (OTP) below to complete your ${purpose === 'login' ? 'login' : 'signup'} verification.
-              </p>
-
-              <!-- OTP BOX -->
-              <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:0 auto 30px auto;max-width:100%;">
-                <tr>
-                  <td align="center" style="background:linear-gradient(145deg, #1a1a1a, #0a0a0a);border:2px solid #dc2626;border-radius:8px;padding:18px 20px;">
-                    <span class="otp-text" style="color:#ffffff;font-size:36px;font-weight:bold;letter-spacing:8px;font-family:'Courier New',monospace;text-shadow:0 0 20px rgba(220,38,38,0.3);display:block;word-break:break-all;">${otp}</span>
-                  </td>
-                </tr>
-              </table>
-
-              <p style="color:#ffffff;font-size:14px;margin:0 0 5px 0;padding:0 10px;">
-                Do not share this code with anyone.
-              </p>
-              <p style="color:#a1a1aa;font-size:13px;margin:0;padding:0 10px;">
-                This code expires in <strong>5 minutes</strong>.
-              </p>
-
-            </td>
-          </tr>
-
-          <!-- FOOTER -->
-          <tr>
-            <td class="footer-cell" align="center" style="padding:24px 15px;background:#0f0f0f;border-top:2px solid #dc2626;">
-              <div class="social-links" style="margin-bottom:15px;text-align:center;">
-                <a href="https://www.instagram.com/klu__esports/" class="social-link" style="display:inline-block;margin:0 6px;color:#dc2626;font-size:12px;text-decoration:none;vertical-align:middle;">
-                  <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="16" height="16" alt="Instagram" style="vertical-align:middle;margin-right:5px;display:inline-block;">
-                  <span style="vertical-align:middle;">Instagram</span>
-                </a>
-                <a href="https://discord.com/invite/pp9wnEjbt" class="social-link" style="display:inline-block;margin:0 6px;color:#dc2626;font-size:12px;text-decoration:none;vertical-align:middle;">
-                  <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/5968/5968756.png" width="16" height="16" alt="Discord" style="vertical-align:middle;margin-right:5px;display:inline-block;">
-                  <span style="vertical-align:middle;">Discord</span>
-                </a>
-                <a href="https://www.youtube.com/@esports.kluniversity" class="social-link" style="display:inline-block;margin:0 6px;color:#dc2626;font-size:12px;text-decoration:none;vertical-align:middle;">
-                  <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" width="16" height="16" alt="YouTube" style="vertical-align:middle;margin-right:5px;display:inline-block;">
-                  <span style="vertical-align:middle;">YouTube</span>
-                </a>
-                <a href="https://www.linkedin.com/company/kl-esports-club" class="social-link" style="display:inline-block;margin:0 6px;color:#dc2626;font-size:12px;text-decoration:none;vertical-align:middle;">
-                  <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/174/174857.png" width="16" height="16" alt="LinkedIn" style="vertical-align:middle;margin-right:5px;display:inline-block;">
-                  <span style="vertical-align:middle;">LinkedIn</span>
-                </a>
-              </div>
-
-              <p style="color:#71717a;font-size:12px;margin:15px 0 0 0;padding:0 10px;line-height:1.5;">
-                © 2026 KLU Esports Club. All rights reserved.
-              </p>
-              <p style="color:#71717a;font-size:10px;margin:8px 0 0 0;padding:0 10px;line-height:1.5;white-space:nowrap;">
-                Designed and Developed by <span style="color:#dc2626;">S. Veerendra Chowdary</span>
-              </p>
-            </td>
-          </tr>
-
-        </table>
-
-      </td>
-    </tr>
-  </table>
-</body>
-</html>
-
-`;
-
       const mailOptions = {
-        from: `"KLU Esports" <${process.env.EMAIL_USER}>`,
+        from: `"KLU ESPORTS" <${process.env.EMAIL_USER}>`,
         to: identifier,
-        subject: `KLU Esports - ${purpose === 'login' ? 'Login' : 'Signup'} OTP`,
-        text: `Your OTP for KLU Esports is: ${otp}. It expires in 5 minutes.`, // Fallback for plain text clients
-        html: htmlContent
+        subject: `KLU ESPORTS - ${purpose === 'login' ? 'Login' : 'Signup'} OTP`,
+        text: `Your OTP for KLU ESPORTS is: ${otp}. It expires in 5 minutes.`, // Fallback for plain text clients
+        html: getRichEmailTemplate(
+          'KLU ESPORTS',
+          `Use the One-Time Password (OTP) below to complete your ${purpose === 'login' ? 'login' : 'signup'} verification.`,
+          otp
+        )
       };
 
       await transporter.sendMail(mailOptions);
@@ -311,6 +325,7 @@ router.post('/otp/verify', async (req, res) => {
       user.collegeId = userData.collegeId;
       user.gameYouPlay = userData.gameYouPlay;
       user.mobile = userData.mobile;
+      if (userData.bio) user.bio = userData.bio;
 
       if (userData.password) {
         // Hash Password before saving
@@ -383,37 +398,94 @@ router.post('/otp/verify', async (req, res) => {
 
 // --- New Routes for Self-Service Email/Password Updates ---
 
-// POST /api/auth/otp/send-change-email (for logged-in users)
-router.post('/otp/send-change-email', protect, async (req, res) => {
+// STEP 1: Send OTP to CURRENT Email to authorize change
+router.post('/otp/send-current-email-otp', protect, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    const otp = generateOTP();
+    const otpExpires = new Date(Date.now() + 5 * 60 * 1000);
+
+    user.otp = otp;
+    user.otpExpires = otpExpires;
+    user.isEmailChangeAuthorized = false; // Reset authorization
+    user.tempEmail = undefined; // Clear any stale temp email
+    await user.save();
+
+    const mailOptions = {
+      from: `"KLU ESPORTS" <${process.env.EMAIL_USER}>`,
+      to: user.email,
+      subject: 'KLU ESPORTS - Authorize Email Change',
+      html: getRichEmailTemplate(
+        'KLU ESPORTS',
+        'You requested to change your account email. To authorize this change, please enter the OTP below.',
+        otp,
+        'This code expires in 5 minutes.',
+        'email-change-verify'
+      )
+    };
+
+    await transporter.sendMail(mailOptions);
+    res.json({ success: true, message: 'OTP sent to your current email' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// STEP 2: Verify CURRENT Email OTP
+router.post('/otp/verify-current-email-otp', protect, async (req, res) => {
+  try {
+    const { otp } = req.body;
+    const user = await User.findById(req.user._id);
+
+    if (!user.otp || user.otp !== otp || new Date() > user.otpExpires) {
+      return res.status(400).json({ success: false, message: 'Invalid or expired OTP' });
+    }
+
+    user.otp = undefined;
+    user.otpExpires = undefined;
+    user.isEmailChangeAuthorized = true; // Authorized!
+    await user.save();
+
+    res.json({ success: true, message: 'Current email verified. Please enter new email.' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// STEP 3: Send OTP to NEW Email (Only if authorized)
+router.post('/otp/send-new-email-otp', protect, async (req, res) => {
   try {
     const { newEmail } = req.body;
     if (!newEmail) return res.status(400).json({ success: false, message: 'New email is required' });
 
-    // Check if new email is already taken
+    const user = await User.findById(req.user._id);
+
+    if (!user.isEmailChangeAuthorized) {
+      return res.status(403).json({ success: false, message: 'You must verify your current email first.' });
+    }
+
     const existingUser = await User.findOne({ email: newEmail });
     if (existingUser) return res.status(400).json({ success: false, message: 'Email already in use' });
 
     const otp = generateOTP();
     const otpExpires = new Date(Date.now() + 5 * 60 * 1000);
 
-    const user = await User.findById(req.user._id);
     user.otp = otp;
     user.otpExpires = otpExpires;
+    user.tempEmail = newEmail; // Store temp email
     await user.save();
 
-    // Send to NEW email
     const mailOptions = {
-      from: `"KLU Esports" <${process.env.EMAIL_USER}>`,
+      from: `"KLU ESPORTS" <${process.env.EMAIL_USER}>`,
       to: newEmail,
-      subject: 'KLU Esports - Email Change Verification OTP',
-      html: `
-        <div style="background-color:#09090b; color:#ffffff; padding:40px; font-family:sans-serif; text-align:center; border:2px solid #dc2626; border-radius:12px;">
-          <h1 style="color:#ffffff;">KLU <span style="color:#dc2626;">ESPORTS</span></h1>
-          <p style="font-size:16px;">You requested to change your email to this address. Use the OTP below to verify ownership:</p>
-          <div style="background:#121212; border:1px solid #dc2626; padding:20px; font-size:32px; letter-spacing:8px; display:inline-block; margin:20px 0; border-radius:8px;">${otp}</div>
-          <p style="color:#a1a1aa; font-size:13px;">This code expires in 5 minutes. If you did not request this, please ignore this email.</p>
-        </div>
-      `
+      subject: 'KLU ESPORTS - Verify New Email',
+      html: getRichEmailTemplate(
+        'KLU ESPORTS',
+        `Please verify your new email address (${newEmail}) to complete the email change process.`,
+        otp,
+        'This code expires in 5 minutes.',
+        'email-change-new'
+      )
     };
 
     await transporter.sendMail(mailOptions);
@@ -423,19 +495,25 @@ router.post('/otp/send-change-email', protect, async (req, res) => {
   }
 });
 
-// POST /api/auth/otp/verify-change-email
-router.post('/otp/verify-change-email', protect, async (req, res) => {
+// STEP 4: Verify NEW Email OTP and Update
+router.post('/otp/verify-new-email-otp', protect, async (req, res) => {
   try {
-    const { otp, newEmail } = req.body;
+    const { otp } = req.body;
     const user = await User.findById(req.user._id);
 
     if (!user.otp || user.otp !== otp || new Date() > user.otpExpires) {
       return res.status(400).json({ success: false, message: 'Invalid or expired OTP' });
     }
 
-    user.email = newEmail;
+    if (!user.tempEmail) {
+      return res.status(400).json({ success: false, message: 'No new email request found.' });
+    }
+
+    user.email = user.tempEmail; // UPDATE EMAIL
     user.otp = undefined;
     user.otpExpires = undefined;
+    user.tempEmail = undefined;
+    user.isEmailChangeAuthorized = false; // Reset flow
     await user.save();
 
     res.json({ success: true, message: 'Email updated successfully', newEmail: user.email });
@@ -456,17 +534,16 @@ router.post('/otp/send-reset-password', protect, async (req, res) => {
     await user.save();
 
     const mailOptions = {
-      from: `"KLU Esports" <${process.env.EMAIL_USER}>`,
+      from: `"KLU ESPORTS" <${process.env.EMAIL_USER}>`,
       to: user.email,
-      subject: 'KLU Esports - Password Change Request OTP',
-      html: `
-        <div style="background-color:#09090b; color:#ffffff; padding:40px; font-family:sans-serif; text-align:center; border:2px solid #dc2626; border-radius:12px;">
-          <h1 style="color:#ffffff;">KLU <span style="color:#dc2626;">ESPORTS</span></h1>
-          <p style="font-size:16px;">You requested to reset your password. Use the OTP below to proceed:</p>
-          <div style="background:#121212; border:1px solid #dc2626; padding:20px; font-size:32px; letter-spacing:8px; display:inline-block; margin:20px 0; border-radius:8px;">${otp}</div>
-          <p style="color:#a1a1aa; font-size:13px;">This code expires in 5 minutes.</p>
-        </div>
-      `
+      subject: 'KLU ESPORTS - Password Change Request OTP',
+      html: getRichEmailTemplate(
+        'KLU ESPORTS',
+        'You requested to reset your password. Use the OTP below to verify and set your new password.',
+        otp,
+        'This code expires in 5 minutes.',
+        'password-reset'
+      )
     };
 
     await transporter.sendMail(mailOptions);
@@ -481,6 +558,69 @@ router.post('/otp/verify-reset-password', protect, async (req, res) => {
   try {
     const { otp, newPassword } = req.body;
     const user = await User.findById(req.user._id);
+
+    if (!user.otp || user.otp !== otp || new Date() > user.otpExpires) {
+      return res.status(400).json({ success: false, message: 'Invalid or expired OTP' });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(newPassword, salt);
+    user.otp = undefined;
+    user.otpExpires = undefined;
+    await user.save();
+
+    res.json({ success: true, message: 'Password updated successfully' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// POST /api/auth/forgot-password (Public)
+router.post('/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ success: false, message: 'Email is required' });
+
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+
+    const otp = generateOTP();
+    const otpExpires = new Date(Date.now() + 5 * 60 * 1000);
+
+    user.otp = otp;
+    user.otpExpires = otpExpires;
+    await user.save();
+
+    const mailOptions = {
+      from: `"KLU ESPORTS" <${process.env.EMAIL_USER}>`,
+      to: user.email,
+      subject: 'KLU ESPORTS - Password Reset Request',
+      html: getRichEmailTemplate(
+        'KLU ESPORTS',
+        'You requested to reset your password. Use the OTP below to verify and set your new password.',
+        otp,
+        'This code expires in 5 minutes.',
+        'password-reset'
+      )
+    };
+
+    await transporter.sendMail(mailOptions);
+    res.json({ success: true, message: 'OTP sent to your email' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// POST /api/auth/reset-password (Public)
+router.post('/reset-password', async (req, res) => {
+  try {
+    const { email, otp, newPassword } = req.body;
+    if (!email || !otp || !newPassword) {
+      return res.status(400).json({ success: false, message: 'All fields are required' });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ success: false, message: 'User not found' });
 
     if (!user.otp || user.otp !== otp || new Date() > user.otpExpires) {
       return res.status(400).json({ success: false, message: 'Invalid or expired OTP' });

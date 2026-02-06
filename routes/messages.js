@@ -105,23 +105,26 @@ const generateContactEmailHTML = (name, email, subject, message) => {
           </tr>
 
           <tr>
-            <td align="center" class="social-footer" style="padding:24px;background:#0f0f0f;border-top:2px solid #dc2626;">
-              <div style="margin-bottom:15px;white-space:nowrap;">
-                <a href="https://www.instagram.com/klu__esports/" class="social-link" style="margin:0 4px;color:#dc2626;font-size:11px;text-decoration:none;display:inline-block;white-space:nowrap;">
-                  <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="14" height="14" style="vertical-align:middle;margin-right:4px;">Instagram
-                </a>
-                <a href="https://discord.com/invite/pp9wnEjbt" class="social-link" style="margin:0 4px;color:#dc2626;font-size:11px;text-decoration:none;display:inline-block;white-space:nowrap;">
-                  <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/5968/5968756.png" width="14" height="14" style="vertical-align:middle;margin-right:4px;">Discord
-                </a>
-                <a href="https://www.youtube.com/@esports.kluniversity" class="social-link" style="margin:0 4px;color:#dc2626;font-size:11px;text-decoration:none;display:inline-block;white-space:nowrap;">
-                  <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" width="14" height="14" style="vertical-align:middle;margin-right:4px;">YouTube
-                </a>
-                <a href="https://www.linkedin.com/company/klu-esports/" class="social-link" style="margin:0 4px;color:#dc2626;font-size:11px;text-decoration:none;display:inline-block;white-space:nowrap;">
-                  <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/174/174857.png" width="14" height="14" style="vertical-align:middle;margin-right:4px;">LinkedIn
-                </a>
+            <td class="footer-cell" align="center" style="padding:24px 15px;background:#0f0f0f;border-top:2px solid #dc2626;">
+               <div style="margin-bottom: 10px;white-space:nowrap;">
+                  <a href="https://www.instagram.com/klu__esports/" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626; font-size: 11px;white-space:nowrap;">
+                      <img class="social-icon" src="https://cdn-icons-png.flaticon.com/128/174/174855.png" alt="Instagram" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;">Instagram
+                  </a>
+                  <span style="color:#71717a;">|</span>
+                  <a href="https://discord.com/invite/pp9wnEjbt" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626; font-size: 11px;white-space:nowrap;">
+                      <img class="social-icon" src="https://cdn-icons-png.flaticon.com/128/5968/5968756.png" alt="Discord" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;">Discord
+                  </a>
+                  <span style="color:#71717a;">|</span>
+                  <a href="https://www.youtube.com/@esports.kluniversity" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626; font-size: 11px;white-space:nowrap;">
+                      <img class="social-icon" src="https://cdn-icons-png.flaticon.com/128/1384/1384060.png" alt="YouTube" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;">YouTube
+                  </a>
+                  <span style="color:#71717a;">|</span>
+                  <a href="https://www.linkedin.com/company/kl-esports-club" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626; font-size: 11px;white-space:nowrap;">
+                      <img class="social-icon" src="https://cdn-icons-png.flaticon.com/128/174/174857.png" alt="LinkedIn" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;">LinkedIn
+                  </a>
               </div>
-              <p style="margin:8px 0 0 0;font-size:12px;color:#71717a;">© 2026 KLU Esports Club. All rights reserved.</p>
-              <p style="margin:6px 0 0 0;font-size:11px;color:#71717a;">Designed and Developed by <span style="color:#dc2626;">S. Veerendra Chowdary</span></p>
+              <p style="color:#71717a;font-size:12px;margin:15px 0 0 0;padding:0 10px;line-height:1.5;">© 2026 KLU Esports Club. All rights reserved.</p>
+              <p style="color:#71717a;font-size:10px;margin:8px 0 0 0;padding:0 10px;line-height:1.5;white-space:nowrap;">Designed and Developed by <span style="color:#dc2626;">S. Veerendra Chowdary</span></p>
             </td>
           </tr>
 
@@ -215,24 +218,27 @@ const generateConfirmationEmailHTML = (name) => {
                     </tr>
 
                     <tr>
-                        <td align="center" class="social-footer" style="padding: 24px; background-color: #0f0f0f; border-top: 2px solid #dc2626;">
-                           <div style="margin-bottom: 10px;white-space:nowrap;">
-                                <a href="https://www.instagram.com/klu__esports/" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626; font-size: 11px;white-space:nowrap;">
-                                    <img class="social-icon" src="https://cdn-icons-png.flaticon.com/128/174/174855.png" alt="Instagram" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;">Instagram
-                                </a>
-                                <a href="https://discord.com/invite/pp9wnEjbt" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626; font-size: 11px;white-space:nowrap;">
-                                    <img class="social-icon" src="https://cdn-icons-png.flaticon.com/128/5968/5968756.png" alt="Discord" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;">Discord
-                                </a>
-                                <a href="https://www.youtube.com/@esports.kluniversity" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626; font-size: 11px;white-space:nowrap;">
-                                    <img class="social-icon" src="https://cdn-icons-png.flaticon.com/128/1384/1384060.png" alt="YouTube" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;">YouTube
-                                </a>
-                                <a href="https://www.linkedin.com/company/kl-esports-club" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626; font-size: 11px;white-space:nowrap;">
-                                    <img class="social-icon" src="https://cdn-icons-png.flaticon.com/128/174/174857.png" alt="LinkedIn" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;">LinkedIn
-                                </a>
-                            </div>
-                            <p style="color: #71717a; font-size: 12px; margin: 15px 0 0 0;">© 2026 KLU Esports Club. All rights reserved.</p>
-                            <p style="color: #71717a; font-size: 10px; margin: 10px 0;white-space:nowrap;">Designed and Developed by <span style="color: #dc2626;">S. Veerendra Chowdary</span></p>
-                        </td>
+                         <td class="footer-cell" align="center" style="padding:24px 15px;background:#0f0f0f;border-top:2px solid #dc2626;">
+               <div style="margin-bottom: 10px;white-space:nowrap;">
+                  <a href="https://www.instagram.com/klu__esports/" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626; font-size: 11px;white-space:nowrap;">
+                      <img class="social-icon" src="https://cdn-icons-png.flaticon.com/128/174/174855.png" alt="Instagram" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;">Instagram
+                  </a>
+                  <span style="color:#71717a;">|</span>
+                  <a href="https://discord.com/invite/pp9wnEjbt" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626; font-size: 11px;white-space:nowrap;">
+                      <img class="social-icon" src="https://cdn-icons-png.flaticon.com/128/5968/5968756.png" alt="Discord" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;">Discord
+                  </a>
+                  <span style="color:#71717a;">|</span>
+                  <a href="https://www.youtube.com/@esports.kluniversity" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626; font-size: 11px;white-space:nowrap;">
+                      <img class="social-icon" src="https://cdn-icons-png.flaticon.com/128/1384/1384060.png" alt="YouTube" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;">YouTube
+                  </a>
+                  <span style="color:#71717a;">|</span>
+                  <a href="https://www.linkedin.com/company/kl-esports-club" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626; font-size: 11px;white-space:nowrap;">
+                      <img class="social-icon" src="https://cdn-icons-png.flaticon.com/128/174/174857.png" alt="LinkedIn" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;">LinkedIn
+                  </a>
+              </div>
+              <p style="color:#71717a;font-size:12px;margin:15px 0 0 0;padding:0 10px;line-height:1.5;">© 2026 KLU Esports Club. All rights reserved.</p>
+              <p style="color:#71717a;font-size:10px;margin:8px 0 0 0;padding:0 10px;line-height:1.5;white-space:nowrap;">Designed and Developed by <span style="color:#dc2626;">S. Veerendra Chowdary</span></p>
+            </td>
                     </tr>
                 </table>
             </td>
