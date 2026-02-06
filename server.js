@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 5005;
 
 // Middleware
 app.use(cors({
-    origin: ['http://localhost:5173', 'https://kluesports.in'],
+    origin: ['http://localhost:5173', 'https://kluesports.in'], // Allow frontend
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
