@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
-const nodemailer = require('nodemailer');
+// const nodemailer = require('nodemailer');
+const sendEmail = require('../utils/sendEmail');
 const bcrypt = require('bcryptjs');
 const { isSuperAdmin } = require('../config/superAdmins');
 const { protect } = require('../middleware/authMiddleware');
@@ -188,6 +189,7 @@ const generateToken = (id) => {
   );
 };
 
+/*
 const transporter = nodemailer.createTransport({
   service: 'gmail', // Use built-in service for better reliability
   host: 'smtp.gmail.com',
@@ -198,6 +200,7 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS
   }
 });
+*/
 
 // POST /api/auth/otp/send
 router.post('/otp/send', async (req, res) => {
@@ -260,19 +263,15 @@ router.post('/otp/send', async (req, res) => {
 
     // Send Email if identifier is an email address
     if (identifier.includes('@')) {
-      const mailOptions = {
-        from: `"KLU ESPORTS" <${process.env.EMAIL_USER}>`,
-        to: identifier,
-        subject: `KLU ESPORTS - ${purpose === 'login' ? 'Login' : 'Signup'} OTP`,
-        text: `Your OTP for KLU ESPORTS is: ${otp}. It expires in 5 minutes.`, // Fallback for plain text clients
-        html: getRichEmailTemplate(
-          'KLU ESPORTS',
-          `Use the One-Time Password (OTP) below to complete your ${purpose === 'login' ? 'login' : 'signup'} verification.`,
-          otp
-        )
-      };
+      const subject = `KLU ESPORTS - ${purpose === 'login' ? 'Login' : 'Signup'} OTP`;
+      const htmlContent = getRichEmailTemplate(
+        'KLU ESPORTS',
+        `Use the One-Time Password (OTP) below to complete your ${purpose === 'login' ? 'login' : 'signup'} verification.`,
+        otp
+      );
+      const textContent = `Your OTP for KLU ESPORTS is: ${otp}. It expires in 5 minutes.`;
 
-      await transporter.sendMail(mailOptions);
+      await sendEmail(identifier, subject, htmlContent, textContent);
     }
 
     res.status(200).json({
@@ -412,20 +411,16 @@ router.post('/otp/send-current-email-otp', protect, async (req, res) => {
     user.tempEmail = undefined; // Clear any stale temp email
     await user.save();
 
-    const mailOptions = {
-      from: `"KLU ESPORTS" <${process.env.EMAIL_USER}>`,
-      to: user.email,
-      subject: 'KLU ESPORTS - Authorize Email Change',
-      html: getRichEmailTemplate(
-        'KLU ESPORTS',
-        'You requested to change your account email. To authorize this change, please enter the OTP below.',
-        otp,
-        'This code expires in 5 minutes.',
-        'email-change-verify'
-      )
-    };
+    const subject = 'KLU ESPORTS - Authorize Email Change';
+    const htmlContent = getRichEmailTemplate(
+      'KLU ESPORTS',
+      'You requested to change your account email. To authorize this change, please enter the OTP below.',
+      otp,
+      'This code expires in 5 minutes.',
+      'email-change-verify'
+    );
 
-    await transporter.sendMail(mailOptions);
+    await sendEmail(user.email, subject, htmlContent);
     res.json({ success: true, message: 'OTP sent to your current email' });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Server error' });
@@ -476,20 +471,16 @@ router.post('/otp/send-new-email-otp', protect, async (req, res) => {
     user.tempEmail = newEmail; // Store temp email
     await user.save();
 
-    const mailOptions = {
-      from: `"KLU ESPORTS" <${process.env.EMAIL_USER}>`,
-      to: newEmail,
-      subject: 'KLU ESPORTS - Verify New Email',
-      html: getRichEmailTemplate(
-        'KLU ESPORTS',
-        `Please verify your new email address <span style="white-space:nowrap">(<a href="mailto:${newEmail}" style="color: #10b981; text-decoration: none;">${newEmail}</a>)</span> to complete the email change process.`,
-        otp,
-        'This code expires in 5 minutes.',
-        'email-change-new'
-      )
-    };
+    const subject = 'KLU ESPORTS - Verify New Email';
+    const htmlContent = getRichEmailTemplate(
+      'KLU ESPORTS',
+      `Please verify your new email address <span style="white-space:nowrap">(<a href="mailto:${newEmail}" style="color: #10b981; text-decoration: none;">${newEmail}</a>)</span> to complete the email change process.`,
+      otp,
+      'This code expires in 5 minutes.',
+      'email-change-new'
+    );
 
-    await transporter.sendMail(mailOptions);
+    await sendEmail(newEmail, subject, htmlContent);
     res.json({ success: true, message: 'OTP sent to new email' });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Server error' });
@@ -534,20 +525,16 @@ router.post('/otp/send-reset-password', protect, async (req, res) => {
     user.otpExpires = otpExpires;
     await user.save();
 
-    const mailOptions = {
-      from: `"KLU ESPORTS" <${process.env.EMAIL_USER}>`,
-      to: user.email,
-      subject: 'KLU ESPORTS - Password Change Request OTP',
-      html: getRichEmailTemplate(
-        'KLU ESPORTS',
-        'You requested to reset your password. Use the OTP below to verify and set your new password.',
-        otp,
-        'This code expires in 5 minutes.',
-        'password-reset'
-      )
-    };
+    const subject = 'KLU ESPORTS - Password Change Request OTP';
+    const htmlContent = getRichEmailTemplate(
+      'KLU ESPORTS',
+      'You requested to reset your password. Use the OTP below to verify and set your new password.',
+      otp,
+      'This code expires in 5 minutes.',
+      'password-reset'
+    );
 
-    await transporter.sendMail(mailOptions);
+    await sendEmail(user.email, subject, htmlContent);
     res.json({ success: true, message: 'OTP sent to your email' });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Server error' });
@@ -592,20 +579,16 @@ router.post('/forgot-password', async (req, res) => {
     user.otpExpires = otpExpires;
     await user.save();
 
-    const mailOptions = {
-      from: `"KLU ESPORTS" <${process.env.EMAIL_USER}>`,
-      to: user.email,
-      subject: 'KLU ESPORTS - Password Reset Request',
-      html: getRichEmailTemplate(
-        'KLU ESPORTS',
-        'You requested to reset your password. Use the OTP below to verify and set your new password.',
-        otp,
-        'This code expires in 5 minutes.',
-        'password-reset'
-      )
-    };
+    const subject = 'KLU ESPORTS - Password Reset Request';
+    const htmlContent = getRichEmailTemplate(
+      'KLU ESPORTS',
+      'You requested to reset your password. Use the OTP below to verify and set your new password.',
+      otp,
+      'This code expires in 5 minutes.',
+      'password-reset'
+    );
 
-    await transporter.sendMail(mailOptions);
+    await sendEmail(user.email, subject, htmlContent);
     res.json({ success: true, message: 'OTP sent to your email' });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Server error' });

@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const Message = require('../models/Message');
-const nodemailer = require('nodemailer');
+// const nodemailer = require('nodemailer');
+const sendEmail = require('../utils/sendEmail');
 const { protect, admin, superAdmin } = require('../middleware/authMiddleware');
 
 // Email transporter configuration
+/*
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   host: 'smtp.gmail.com',
@@ -15,6 +17,7 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS
   }
 });
+*/
 
 // Generate HTML email template for contact message
 const generateContactEmailHTML = (name, email, subject, message) => {
@@ -274,25 +277,18 @@ router.post('/', async (req, res) => {
     const createdMessage = await newMessage.save();
 
     // Send email to admin
-    const adminMailOptions = {
-      from: `"KLU Esports Contact" <${process.env.EMAIL_USER}>`,
-      to: process.env.EMAIL_USER, // Send to the admin email
-      subject: `New Contact Message: ${subject || 'No Subject'} - from ${name}`,
-      html: generateContactEmailHTML(name, email, subject, message)
-    };
-
-    // Send confirmation email to the sender
-    const confirmationMailOptions = {
-      from: `"KLU Esports" <${process.env.EMAIL_USER}>`,
-      to: email,
-      subject: 'We received your message! - KLU Esports',
-      html: generateConfirmationEmailHTML(name)
-    };
-
     // Send both emails
     await Promise.all([
-      transporter.sendMail(adminMailOptions),
-      transporter.sendMail(confirmationMailOptions)
+      sendEmail(
+        process.env.EMAIL_USER,
+        `New Contact Message: ${subject || 'No Subject'} - from ${name}`,
+        generateContactEmailHTML(name, email, subject, message)
+      ),
+      sendEmail(
+        email,
+        'We received your message! - KLU Esports',
+        generateConfirmationEmailHTML(name)
+      )
     ]);
 
     res.status(201).json({
