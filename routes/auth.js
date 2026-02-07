@@ -189,9 +189,10 @@ const generateToken = (id) => {
 };
 
 const transporter = nodemailer.createTransport({
+  service: 'gmail', // Use built-in service for better reliability
   host: 'smtp.gmail.com',
-  port: 587,
-  secure: false, // true for 465, false for other ports
+  port: 465,
+  secure: true, // Use SSL
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
