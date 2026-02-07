@@ -13,7 +13,8 @@ app.use(cors({
     origin: [
         'http://localhost:5173',
         'https://kluesports.in',
-        'https://www.kluesports.in'
+        'https://www.kluesports.in',
+        'https://kluesports.vercel.app'
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],

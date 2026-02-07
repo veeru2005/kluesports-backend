@@ -481,7 +481,7 @@ router.post('/otp/send-new-email-otp', protect, async (req, res) => {
       subject: 'KLU ESPORTS - Verify New Email',
       html: getRichEmailTemplate(
         'KLU ESPORTS',
-        `Please verify your new email address (${newEmail}) to complete the email change process.`,
+        `Please verify your new email address <span style="white-space:nowrap">(<a href="mailto:${newEmail}" style="color: #10b981; text-decoration: none;">${newEmail}</a>)</span> to complete the email change process.`,
         otp,
         'This code expires in 5 minutes.',
         'email-change-new'
