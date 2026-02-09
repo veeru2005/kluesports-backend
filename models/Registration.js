@@ -23,7 +23,7 @@ const playerBaseSchema = {
         required: true,
         trim: true
     },
-    inGameId: {
+    inGameName: {
         type: String,
         required: true,
         trim: true
@@ -82,7 +82,7 @@ const teamLeadSchema = {
     discordId: { type: String, required: true, trim: true },
     mobileNumber: { type: String, required: true, trim: true },
     email: { type: String, required: true, trim: true, lowercase: true },
-    inGameId: { type: String, trim: true }
+    inGameName: { type: String, trim: true }
 };
 
 // Team Lead schema for Valorant

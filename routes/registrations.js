@@ -169,7 +169,7 @@ router.post('/', protect, async (req, res) => {
         const identifiersToCheck = [
             { key: 'collegeId', label: 'College ID' },
             { key: 'mobileNumber', label: 'Mobile Number' },
-            { key: 'inGameId', label: 'In-Game ID' },
+            { key: 'inGameName', label: 'In-Game Name' },
             { key: 'riotId', label: 'Riot ID' } // For Valorant
         ];
 

@@ -3,7 +3,7 @@
 const SUPER_ADMIN_EMAILS = [
     'sunkavalli.veerendra1973@gmail.com',
     'santoshreed@gmail.com',
-    'superadmin3@klu.ac.in'
+    'singarju.rohith@gmail.com'
 ];
 
 // Helper function to check if an email is a super admin

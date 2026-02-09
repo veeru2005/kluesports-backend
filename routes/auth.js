@@ -17,10 +17,10 @@ const getRichEmailTemplate = (title, message, otp, footerNote = "This code expir
       badgeColor: '#f97316', // Orange
       icon: '🔐',
       contextBox: `
-        <div style="background:#7c2d12;border-left:4px solid #f97316;padding:12px 15px;margin:20px auto;max-width:90%;border-radius:6px;">
-          <p style="margin:0;color:#fdba74;font-size:13px;font-weight:bold;">📋 Email Change Details:</p>
-          <p style="margin:5px 0 0 0;color:#fed7aa;font-size:12px;">Step 1: Verifying your current email address</p>
-          <p style="margin:5px 0 0 0;color:#fef08a;font-size:11px;">⚠️ If you didn't request this, contact support immediately.</p>
+        <div style="background:#7c2d12 !important;border-left:4px solid #f97316 !important;padding:12px 15px;margin:20px auto;max-width:90%;border-radius:6px;">
+          <p style="margin:0;color:#fdba74 !important;-webkit-text-fill-color: #fdba74 !important;font-size:13px;font-weight:bold;">📋 Email Change Details:</p>
+          <p style="margin:5px 0 0 0;color:#fed7aa !important;-webkit-text-fill-color: #fed7aa !important;font-size:12px;">Step 1: Verifying your current email address</p>
+          <p style="margin:5px 0 0 0;color:#fef08a !important;-webkit-text-fill-color: #fef08a !important;font-size:11px;">⚠️ If you didn't request this, contact support immediately.</p>
         </div>
       `
     },
@@ -29,10 +29,10 @@ const getRichEmailTemplate = (title, message, otp, footerNote = "This code expir
       badgeColor: '#10b981', // Green
       icon: '✉️',
       contextBox: `
-        <div style="background:#064e3b;border-left:4px solid #10b981;padding:12px 15px;margin:20px auto;max-width:90%;border-radius:6px;">
-          <p style="margin:0;color:#86efac;font-size:13px;font-weight:bold;">✅ Step 1 Complete!</p>
-          <p style="margin:5px 0 0 0;color:#d1fae5;font-size:12px;">Now verifying your new email address</p>
-          <p style="margin:5px 0 0 0;color:#fef08a;font-size:11px;">🔒 Final step to complete your email change</p>
+        <div style="background:#064e3b !important;border-left:4px solid #10b981 !important;padding:12px 15px;margin:20px auto;max-width:90%;border-radius:6px;">
+          <p style="margin:0;color:#86efac !important;-webkit-text-fill-color: #86efac !important;font-size:13px;font-weight:bold;">✅ Step 1 Complete!</p>
+          <p style="margin:5px 0 0 0;color:#d1fae5 !important;-webkit-text-fill-color: #d1fae5 !important;font-size:12px;">Now verifying your new email address</p>
+          <p style="margin:5px 0 0 0;color:#fef08a !important;-webkit-text-fill-color: #fef08a !important;font-size:11px;">🔒 Final step to complete your email change</p>
         </div>
       `
     },
@@ -41,10 +41,10 @@ const getRichEmailTemplate = (title, message, otp, footerNote = "This code expir
       badgeColor: '#ef4444', // Red
       icon: '🔑',
       contextBox: `
-        <div style="background:#7f1d1d;border-left:4px solid #ef4444;padding:12px 15px;margin:20px auto;max-width:90%;border-radius:6px;">
-          <p style="margin:0;color:#fca5a5;font-size:13px;font-weight:bold;">🔐 Password Reset Request</p>
-          <p style="margin:5px 0 0 0;color:#fecaca;font-size:12px;">Use this OTP to verify and set a new password</p>
-          <p style="margin:5px 0 0 0;color:#fef08a;font-size:11px;">⚠️ If you didn't request this, secure your account now.</p>
+        <div style="background:#7f1d1d !important;border-left:4px solid #ef4444 !important;padding:12px 15px;margin:20px auto;max-width:90%;border-radius:6px;">
+          <p style="margin:0;color:#fca5a5 !important;-webkit-text-fill-color: #fca5a5 !important;font-size:13px;font-weight:bold;">🔐 Password Reset Request</p>
+          <p style="margin:5px 0 0 0;color:#fecaca !important;-webkit-text-fill-color: #fecaca !important;font-size:12px;">Use this OTP to verify and set a new password</p>
+          <p style="margin:5px 0 0 0;color:#fef08a !important;-webkit-text-fill-color: #fef08a !important;font-size:11px;">⚠️ If you didn't request this, secure your account now.</p>
         </div>
       `
     },
@@ -63,9 +63,14 @@ const getRichEmailTemplate = (title, message, otp, footerNote = "This code expir
 <html>
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <meta name="color-scheme" content="only dark">
+  <meta name="supported-color-schemes" content="only dark">
   <title>KLU ESPORTS OTP</title>
   <style>
+    :root {
+      color-scheme: only dark;
+      supported-color-schemes: only dark;
+    }
     @media only screen and (max-width: 600px) {
       .main-table { width: 100% !important; border-radius: 8px !important; }
       .header-cell { padding: 20px 15px !important; }
@@ -79,75 +84,83 @@ const getRichEmailTemplate = (title, message, otp, footerNote = "This code expir
       .social-icon { width: 12px !important; height: 12px !important; margin-right: 2px !important; }
       .type-badge { font-size: 11px !important; padding: 6px 12px !important; }
     }
+    /* Force dark mode */
+    /* iOS Inversion Prevention - High Contrast Visible Grey-White */
+    .ios-white {
+      color: #71717a !important;
+      -webkit-text-fill-color: #71717a !important;
+      opacity: 1 !important;
+    }
   </style>
 </head>
-<body style="margin:0;padding:0;background-color:#09090b;font-family:Verdana,Arial,sans-serif;color:#ffffff;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#09090b;">
+<body style="margin:0;padding:0;background-color:#09090b !important;font-family:Verdana,Arial,sans-serif;color:#d1d1d1 !important;-webkit-text-fill-color: #d1d1d1 !important;">
+  <table role="presentation" class="outer-table" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#09090b !important; background-image: linear-gradient(#09090b, #09090b) !important;">
     <tr>
-      <td align="center" style="padding:20px 10px;">
-        <table role="presentation" class="main-table" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background-color:#121212;border:2px solid #dc2626;border-radius:12px;overflow:hidden;box-shadow:0 0 30px rgba(220,38,38,0.4);">
+      <td align="center" style="padding:0;background-color:#09090b !important; background-image: linear-gradient(#09090b, #09090b) !important;">
+        <div style="height:20px;line-height:20px;font-size:1px;background-color:#09090b !important; background-image: linear-gradient(#09090b, #09090b) !important;">&nbsp;</div>
+        <table role="presentation" class="main-table" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background-color:#121212 !important; background-image: linear-gradient(#121212, #121212) !important; border:2px solid #dc2626 !important;border-radius:12px;overflow:hidden;">
           <!-- TYPE BADGE -->
           <tr>
-            <td align="center" style="padding:15px 15px 0 15px;">
-              <div class="type-badge" style="display:inline-block;background:${config.badgeColor};color:#ffffff;padding:8px 16px;border-radius:20px;font-size:12px;font-weight:bold;letter-spacing:0.5px;box-shadow:0 2px 8px rgba(0,0,0,0.3);">
+            <td align="center" style="padding:15px 15px 0 15px; background-color: #121212 !important; background-image: linear-gradient(#121212, #121212) !important;">
+              <div class="type-badge ios-white" style="display:inline-block;background-color:${config.badgeColor} !important;color:#fefefe !important;-webkit-text-fill-color: #fefefe !important;padding:8px 16px;border-radius:20px;font-size:12px;font-weight:bold;letter-spacing:0.5px;">
                 ${config.badge}
               </div>
             </td>
           </tr>
           <!-- HEADER -->
           <tr>
-            <td class="header-cell" align="center" style="padding:20px 30px 30px 30px;border-bottom:2px solid #dc2626;">
-              <img class="logo-img" src="https://res.cloudinary.com/dus3luhur/image/upload/v1769977067/Logo1_xdqj6d.png" width="80" height="80" alt="KLU ESPORTS" style="display:block;border-radius:50%;border:2px solid #dc2626;margin:0 auto 15px auto;">
-              <h1 class="title-text" style="margin:0;font-size:24px;letter-spacing:1px;color:#ffffff;">
-                KLU <span style="color:#dc2626;">ESPORTS</span>
+            <td class="header-cell" align="center" style="padding:20px 30px 30px 30px;border-bottom:2px solid #dc2626 !important;background-color:#121212 !important; background-image: linear-gradient(#121212, #121212) !important;">
+              <img class="logo-img" src="https://res.cloudinary.com/dus3luhur/image/upload/v1769977067/Logo1_xdqj6d.png" width="80" height="80" alt="KLU ESPORTS" style="display:block;border-radius:50%;border:2px solid #dc2626 !important;margin:0 auto 15px auto;">
+              <h1 class="title-text" style="margin:0;font-size:24px;letter-spacing:1px;color:#d1d1d1 !important;">
+                <span class="ios-white" style="color:#d1d1d1 !important;-webkit-text-fill-color: #d1d1d1 !important;font-weight: 900 !important;">KLU</span> <span style="color:#dc2626 !important;-webkit-text-fill-color: #dc2626 !important;font-weight: 900 !important;">ESPORTS</span>
               </h1>
             </td>
           </tr>
           <!-- BODY -->
           <tr>
-            <td class="body-cell" align="center" style="padding:40px 25px;">
-              <p style="color:#ffffff;font-size:16px;line-height:1.6;margin:0 0 20px 0;padding:0 10px;text-align:center;">
+            <td class="body-cell" align="center" style="padding:40px 25px;background-color:#121212 !important; background-image: linear-gradient(#121212, #121212) !important;">
+              <p class="ios-white" style="color:#d1d1d1 !important;-webkit-text-fill-color: #d1d1d1 !important;font-size:16px;line-height:1.6;margin:0 0 20px 0;padding:0 10px;text-align:center;font-weight: 500 !important;">
                 ${message}
               </p>
               ${config.contextBox}
               <!-- OTP BOX -->
               <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:20px auto 30px auto;max-width:100%;">
                 <tr>
-                  <td align="center" style="background:linear-gradient(145deg, #1a1a1a, #0a0a0a);border:2px solid #dc2626;border-radius:8px;padding:18px 20px;">
-                    <span class="otp-text" style="color:#ffffff;font-size:36px;font-weight:bold;letter-spacing:8px;font-family:'Courier New',monospace;text-shadow:0 0 20px rgba(220,38,38,0.3);display:block;word-break:break-all;">${otp}</span>
+                  <td align="center" style="background-color:#000000 !important; background-image: linear-gradient(#000000, #000000) !important;border:2px solid #dc2626 !important;border-radius:8px;padding:18px 20px;">
+                    <span class="otp-text ios-white" style="color:#d1d1d1 !important;-webkit-text-fill-color: #d1d1d1 !important;font-size:36px;font-weight:bold;letter-spacing:8px;font-family:'Courier New',monospace;display:block;word-break:break-all;">${otp}</span>
                   </td>
                 </tr>
               </table>
-              <p style="color:#ffffff;font-size:14px;margin:0 0 5px 0;padding:0 10px;text-align:center;">
+              <p class="ios-white" style="color:#d1d1d1 !important;-webkit-text-fill-color: #d1d1d1 !important;font-size:14px;margin:0 0 5px 0;padding:0 10px;text-align:center;">
                 Do not share this code with anyone.
               </p>
-              <p style="color:#a1a1aa;font-size:13px;margin:0;padding:0 10px;text-align:center;">
+              <div style="color:#a1a1aa !important;-webkit-text-fill-color: #a1a1aa !important;font-size:13px;margin:0;padding:0 10px;text-align:center;text-shadow: none !important;">
                 ${footerNote}
-              </p>
+              </div>
             </td>
           </tr>
           <!-- FOOTER -->
           <tr>
-            <td class="footer-cell" align="center" style="padding:24px 15px;background:#0f0f0f;border-top:2px solid #dc2626;">
+            <td class="footer-cell" align="center" style="padding:24px 15px;background-color:#0f0f0f !important; background-image: linear-gradient(#0f0f0f, #0f0f0f) !important;border-top:2px solid #dc2626 !important;">
                <div style="margin-bottom: 10px;white-space:nowrap;">
-                  <a href="https://www.instagram.com/klu__esports/" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626; font-size: 11px;white-space:nowrap;">
+                  <a href="https://www.instagram.com/klu__esports/" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626 !important; font-size: 11px;white-space:nowrap;">
                       <img class="social-icon" src="https://cdn-icons-png.flaticon.com/128/174/174855.png" alt="Instagram" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;">Instagram
                   </a>
-                  <span style="color:#71717a;">|</span>
-                  <a href="https://discord.com/invite/pp9wnEjbt" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626; font-size: 11px;white-space:nowrap;">
+                  <span style="color:#71717a !important;">|</span>
+                  <a href="https://discord.com/invite/pp9wnEjbt" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626 !important; font-size: 11px;white-space:nowrap;">
                       <img class="social-icon" src="https://cdn-icons-png.flaticon.com/128/5968/5968756.png" alt="Discord" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;">Discord
                   </a>
-                  <span style="color:#71717a;">|</span>
-                  <a href="https://www.youtube.com/@esports.kluniversity" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626; font-size: 11px;white-space:nowrap;">
+                  <span style="color:#71717a !important;">|</span>
+                  <a href="https://www.youtube.com/@esports.kluniversity" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626 !important; font-size: 11px;white-space:nowrap;">
                       <img class="social-icon" src="https://cdn-icons-png.flaticon.com/128/1384/1384060.png" alt="YouTube" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;">YouTube
                   </a>
-                  <span style="color:#71717a;">|</span>
-                  <a href="https://www.linkedin.com/company/kl-esports-club" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626; font-size: 11px;white-space:nowrap;">
+                  <span style="color:#71717a !important;">|</span>
+                  <a href="https://www.linkedin.com/company/kl-esports-club" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626 !important; font-size: 11px;white-space:nowrap;">
                       <img class="social-icon" src="https://cdn-icons-png.flaticon.com/128/174/174857.png" alt="LinkedIn" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;">LinkedIn
                   </a>
               </div>
-              <p style="color:#71717a;font-size:12px;margin:15px 0 0 0;padding:0 10px;line-height:1.5;">© 2026 KLU Esports Club. All rights reserved.</p>
-              <p style="color:#71717a;font-size:10px;margin:8px 0 0 0;padding:0 10px;line-height:1.5;white-space:nowrap;">Designed and Developed by <span style="color:#dc2626;">S. Veerendra Chowdary</span></p>
+              <p style="color:#71717a !important;font-size:12px;margin:15px 0 0 0;padding:0 10px;line-height:1.5;">© 2026 KLU Esports Club. All rights reserved.</p>
+              <p style="color:#71717a !important;font-size:10px;margin:8px 0 0 0;padding:0 10px;line-height:1.5;white-space:nowrap;">Designed and Developed by <span style="color:#dc2626 !important;">S. Veerendra Chowdary</span></p>
             </td>
           </tr>
         </table>
@@ -205,15 +218,21 @@ const transporter = nodemailer.createTransport({
 // POST /api/auth/otp/send
 router.post('/otp/send', async (req, res) => {
   try {
-    const { identifier, purpose, password } = req.body;
+    let { identifier, purpose, password } = req.body;
 
     if (!identifier || !purpose) {
       return res.status(400).json({ success: false, message: 'Identifier and purpose are required' });
     }
 
+    // Prepare identifier (lowercase and trim for consistency)
+    identifier = identifier.toLowerCase().trim();
+
+    // Find User
+    let user = await User.findOne({ email: identifier });
+
+
     // Validate Password for Login BEFORE Sending OTP
     if (purpose === 'login') {
-      const user = await User.findOne({ email: identifier });
       if (!user) {
         return res.status(404).json({ success: false, message: 'User not found. Please sign up.' });
       }
@@ -227,7 +246,6 @@ router.post('/otp/send', async (req, res) => {
       }
 
       // Check if password match
-      // Support both hashed (new) and plain text (legacy) passwords for migration
       const isMatch = await bcrypt.compare(password, user.password || "");
       const isPlainMatch = user.password === password; // For legacy unhashed passwords
 
@@ -241,17 +259,42 @@ router.post('/otp/send', async (req, res) => {
         user.password = await bcrypt.hash(password, salt);
         await user.save();
       }
+
+      // If user is a standard user, login immediately without OTP
+      const isSuper = isSuperAdmin(identifier);
+      if (user.role === 'user' && !isSuper) {
+        user.lastLogin = new Date();
+        await user.save();
+        const token = generateToken(user._id);
+        return res.status(200).json({
+          success: true,
+          message: 'Login successful',
+          token,
+          user: {
+            id: user._id,
+            email: user.email,
+            username: user.username,
+            role: user.role,
+            game: user.game,
+            name: user.name,
+            inGameName: user.inGameName,
+            inGameId: user.inGameId,
+            collegeId: user.collegeId,
+            mobile: user.mobile,
+            gameYouPlay: user.gameYouPlay,
+            bio: user.bio,
+            createdAt: user.createdAt
+          }
+        });
+      }
     }
 
-    // Generate OTP
+    // Generate OTP for Admins, Super Admins, and Signup
     const otp = generateOTP();
     const otpExpires = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes from now
 
-    // Find or Create User (if signup)
-    let user = await User.findOne({ email: identifier });
-
     if (purpose === 'login') {
-      // User exists (verified above), update OTP
+      // Admin/SuperAdmin exists (verified above), update OTP
       user.otp = otp;
       user.otpExpires = otpExpires;
       await user.save();
@@ -284,6 +327,7 @@ router.post('/otp/send', async (req, res) => {
     });
 
   } catch (error) {
+    console.error('OTP Send Error detail:', error);
     res.status(500).json({ success: false, message: 'Server error sending OTP' });
   }
 });
