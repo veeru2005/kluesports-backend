@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
+const streamifier = require('streamifier');
 const { protect, admin } = require('../middleware/authMiddleware');
 
 // Configure Cloudinary
@@ -41,7 +42,7 @@ router.post('/event-image', protect, admin, upload.single('image'), async (req, 
             {
                 folder: 'klu-esports/events',
                 transformation: [
-                    { width: 1080, height: 1080, crop: 'fill' },
+                    { width: 1200, height: 1600, crop: 'limit' },
                     { quality: 'auto' }
                 ]
             },
@@ -66,6 +67,47 @@ router.post('/event-image', protect, admin, upload.single('image'), async (req, 
     } catch (error) {
         console.error('Upload error:', error);
         res.status(500).json({ message: 'Server error during image upload' });
+    }
+});
+
+// @route   POST /api/upload/team-logo
+// @desc    Upload team logo to Cloudinary
+// @access  Private (Any authenticated user)
+router.post('/team-logo', protect, upload.single('image'), async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ message: 'No image file provided' });
+        }
+
+        // Upload to Cloudinary using upload_stream
+        const uploadStream = cloudinary.uploader.upload_stream(
+            {
+                folder: 'klu-esports/team-logos',
+                transformation: [
+                    { width: 500, height: 500, crop: 'limit' }, // Resize if larger than 500x500
+                    { quality: 'auto' }
+                ]
+            },
+            (error, result) => {
+                if (error) {
+                    console.error('Cloudinary upload error:', error);
+                    return res.status(500).json({ message: 'Failed to upload logo' });
+                }
+
+                res.json({
+                    success: true,
+                    url: result.secure_url,
+                    public_id: result.public_id
+                });
+            }
+        );
+
+        // Pipe the buffer to Cloudinary
+        streamifier.createReadStream(req.file.buffer).pipe(uploadStream);
+
+    } catch (error) {
+        console.error('Upload error:', error);
+        res.status(500).json({ message: 'Server error during logo upload' });
     }
 });
 

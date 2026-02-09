@@ -19,7 +19,10 @@ const sendEmail = async (to, subject, htmlContent, textContent = '') => {
                 }
             }
         );
-        console.log('Email sent successfully:', response.data);
+        // Only log in production to keep development console clean
+        if (process.env.NODE_ENV === 'production') {
+            console.log('Email sent successfully:', response.data);
+        }
         return response.data;
     } catch (error) {
         console.error('Error sending email:', error.response ? error.response.data : error.message);

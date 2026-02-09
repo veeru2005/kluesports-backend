@@ -13,6 +13,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         trim: true
     },
+    inGameId: {
+        type: String,
+        trim: true
+    },
     collegeId: {
         type: String,
         trim: true
@@ -50,6 +54,10 @@ const userSchema = new mongoose.Schema({
     otpExpires: {
         type: Date
     },
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
     lastLogin: {
         type: Date
     },
@@ -65,7 +73,18 @@ const userSchema = new mongoose.Schema({
     isEmailChangeAuthorized: { // Flag to track if current email has authorized the change
         type: Boolean,
         default: false
-    }
+    },
+    registrations: [{
+        registrationId: { type: String },
+        eventId: { type: String },
+        eventTitle: { type: String },
+        game: { type: String },
+        teamName: { type: String },
+        eventDate: { type: Date },
+        eventLocation: { type: String },
+        eventEndTime: { type: Date },
+        registeredAt: { type: Date, default: Date.now }
+    }]
 }, {
     timestamps: true
 });

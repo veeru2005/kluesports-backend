@@ -31,6 +31,10 @@ const eventSchema = new mongoose.Schema({
     },
     image_url: {
         type: String
+    },
+    is_registration_open: {
+        type: Boolean,
+        default: true
     }
 }, {
     timestamps: true

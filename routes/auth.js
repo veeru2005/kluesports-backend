@@ -218,6 +218,10 @@ router.post('/otp/send', async (req, res) => {
         return res.status(404).json({ success: false, message: 'User not found. Please sign up.' });
       }
 
+      if (!user.isVerified) {
+        return res.status(401).json({ success: false, message: 'Account not verified. Please sign up again to verify your email.' });
+      }
+
       if (!password) {
         return res.status(400).json({ success: false, message: 'Password is required for login' });
       }
@@ -322,6 +326,7 @@ router.post('/otp/verify', async (req, res) => {
       user.username = finalUsername;
       user.name = userData.name;
       user.inGameName = userData.inGameName;
+      user.inGameId = userData.inGameId;
       user.collegeId = userData.collegeId;
       user.gameYouPlay = userData.gameYouPlay;
       user.mobile = userData.mobile;
@@ -357,6 +362,9 @@ router.post('/otp/verify', async (req, res) => {
         };
         user.game = gameMap[role];
       }
+
+      // Mark user as verified after signup
+      user.isVerified = true;
     }
 
     // Clear OTP after successful verification
@@ -383,6 +391,7 @@ router.post('/otp/verify', async (req, res) => {
         game: user.game,
         name: user.name,
         inGameName: user.inGameName,
+        inGameId: user.inGameId,
         collegeId: user.collegeId,
         mobile: user.mobile,
         gameYouPlay: user.gameYouPlay,

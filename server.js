@@ -33,12 +33,14 @@ const eventRoutes = require('./routes/events');
 const messageRoutes = require('./routes/messages');
 const userRoutes = require('./routes/users');
 const uploadRoutes = require('./routes/upload');
+const registrationRoutes = require('./routes/registrations');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/registrations', registrationRoutes);
 
 app.get('/', (req, res) => {
     res.send('API is running...');

@@ -3,6 +3,16 @@ const router = express.Router();
 const Event = require('../models/Event');
 const { protect, admin, superAdmin } = require('../middleware/authMiddleware');
 
+// Helper to validate game admin access
+const validateGameAccess = (user, game) => {
+    if (user.role === 'super_admin') return true;
+    if (user.role === 'admin_freefire' && game === 'Free Fire') return true;
+    if (user.role === 'admin_bgmi' && game === 'BGMI') return true;
+    if (user.role === 'admin_valorant' && game === 'Valorant') return true;
+    if (user.role === 'admin_call_of_duty' && game === 'Call Of Duty') return true;
+    return false;
+};
+
 // @desc    Get all events
 // @route   GET /api/events
 // @access  Public
@@ -38,6 +48,10 @@ router.post('/', protect, admin, async (req, res) => {
     try {
         const { title, description, event_date, end_time, location, game, max_participants, image_url } = req.body;
 
+        if (!validateGameAccess(req.user, game)) {
+            return res.status(403).json({ message: 'Not authorized to create events for this game' });
+        }
+
         const event = new Event({
             title,
             description,
@@ -46,7 +60,8 @@ router.post('/', protect, admin, async (req, res) => {
             location,
             game,
             max_participants,
-            image_url
+            image_url,
+            is_registration_open: req.body.is_registration_open !== undefined ? req.body.is_registration_open : true
         });
 
         const createdEvent = await event.save();
@@ -64,6 +79,10 @@ router.put('/:id', protect, admin, async (req, res) => {
         const event = await Event.findById(req.params.id);
 
         if (event) {
+            // Validate access
+            if (!validateGameAccess(req.user, event.game) || (req.body.game && !validateGameAccess(req.user, req.body.game))) {
+                return res.status(403).json({ message: 'Not authorized to update events for this game' });
+            }
             event.title = req.body.title || event.title;
             event.description = req.body.description || event.description;
             event.event_date = req.body.event_date || event.event_date;
@@ -72,6 +91,9 @@ router.put('/:id', protect, admin, async (req, res) => {
             event.game = req.body.game || event.game;
             event.max_participants = req.body.max_participants || event.max_participants;
             event.image_url = req.body.image_url || event.image_url;
+            if (req.body.is_registration_open !== undefined) {
+                event.is_registration_open = req.body.is_registration_open;
+            }
 
             const updatedEvent = await event.save();
             res.json(updatedEvent);
@@ -83,16 +105,25 @@ router.put('/:id', protect, admin, async (req, res) => {
     }
 });
 
+const User = require('../models/User');
+
 // @desc    Delete an event
 // @route   DELETE /api/events/:id
-// @access  Private/Admin or SuperAdmin
-router.delete('/:id', protect, admin, async (req, res) => {
+// @access  Private/SuperAdmin
+router.delete('/:id', protect, superAdmin, async (req, res) => {
     try {
-        const event = await Event.findById(req.params.id);
+        const eventId = req.params.id;
+        const event = await Event.findById(eventId);
 
         if (event) {
+            // Remove this event from all user profiles' registrations array
+            await User.updateMany(
+                { 'registrations.eventId': eventId },
+                { $pull: { registrations: { eventId: eventId } } }
+            );
+
             await event.deleteOne();
-            res.json({ message: 'Event removed' });
+            res.json({ message: 'Event removed and cleaned from user profiles' });
         } else {
             res.status(404).json({ message: 'Event not found' });
         }

@@ -49,6 +49,14 @@ const protect = async (req, res, next) => {
                 });
             }
 
+            if (!req.user.isVerified) {
+                return res.status(401).json({
+                    success: false,
+                    message: 'Account not verified. Please complete signup.',
+                    sessionExpired: true
+                });
+            }
+
             next();
         } catch (error) {
             if (error.name === 'TokenExpiredError') {

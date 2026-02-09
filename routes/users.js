@@ -9,8 +9,25 @@ const { protect, superAdmin, admin } = require('../middleware/authMiddleware');
 // @access  Private/Admin
 router.get('/', protect, admin, async (req, res) => {
     try {
-        const users = await User.find({}).select('-password');
+        const users = await User.find({ isVerified: true }).select('-password -otp -otpExpires -tempEmail -isEmailChangeAuthorized');
         res.json(users);
+    } catch (error) {
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
+
+// @desc    Check if email exists
+// @route   GET /api/users/check-email/:email
+// @access  Private
+router.get('/check-email/:email', protect, async (req, res) => {
+    try {
+        const user = await User.findOne({ email: req.params.email.toLowerCase() })
+            .select('name email collegeId mobile inGameName inGameId role');
+        if (user) {
+            res.json({ exists: true, user });
+        } else {
+            res.json({ exists: false, message: 'This user has not created an account' });
+        }
     } catch (error) {
         res.status(500).json({ message: 'Server Error' });
     }
@@ -21,11 +38,11 @@ router.get('/', protect, admin, async (req, res) => {
 // @access  Private/SuperAdmin
 router.get('/admins', protect, superAdmin, async (req, res) => {
     try {
-        const admins = await User.find({ role: { $regex: '^admin_', $options: 'i' } }); // regex for admin_
-        // Also include super_admin if needed, but usually we want to see sub-admins
+        // Only return game-specific admins, not super_admin
         const allAdmins = await User.find({
-            role: { $in: ['super_admin', 'admin_freefire', 'admin_bgmi', 'admin_valorant', 'admin_call_of_duty'] }
-        }).select('-password');
+            role: { $in: ['admin_freefire', 'admin_bgmi', 'admin_valorant', 'admin_call_of_duty'] },
+            isVerified: true
+        }).select('-password -otp -otpExpires -tempEmail -isEmailChangeAuthorized');
         res.json(allAdmins);
     } catch (error) {
         res.status(500).json({ message: 'Server Error' });
@@ -62,6 +79,7 @@ router.put('/profile', protect, async (req, res) => {
             user.collegeId = req.body.collegeId || user.collegeId;
             user.mobile = req.body.mobile || user.mobile;
             user.bio = req.body.bio || user.bio;
+            user.inGameId = req.body.inGameId || user.inGameId;
             user.gameYouPlay = req.body.gameYouPlay || user.gameYouPlay;
 
             if (req.body.email) {
@@ -80,6 +98,8 @@ router.put('/profile', protect, async (req, res) => {
                     collegeId: updatedUser.collegeId,
                     mobile: updatedUser.mobile,
                     bio: updatedUser.bio,
+                    inGameName: updatedUser.inGameName,
+                    inGameId: updatedUser.inGameId,
                     gameYouPlay: updatedUser.gameYouPlay,
                     createdAt: updatedUser.createdAt
                 }
@@ -110,6 +130,7 @@ router.put('/:id', protect, superAdmin, async (req, res) => {
             user.role = req.body.role || user.role;
             user.game = req.body.game || user.game;
             user.gameYouPlay = req.body.gameYouPlay || user.gameYouPlay;
+            user.inGameId = req.body.inGameId || user.inGameId;
 
             // Update password if provided
             if (req.body.password) {
@@ -175,7 +196,7 @@ router.delete('/:id', protect, admin, async (req, res) => {
 // @access  Private/SuperAdmin
 router.post('/admins', protect, superAdmin, async (req, res) => {
     try {
-        const { name, username, email, mobile, password, role, game } = req.body;
+        const { name, email, mobile, password, role, game, inGameName, inGameId, collegeId, bio } = req.body;
 
         // Check if user already exists
         const userExists = await User.findOne({ email });
@@ -190,19 +211,28 @@ router.post('/admins', protect, superAdmin, async (req, res) => {
             return res.status(400).json({ message: 'Invalid admin role' });
         }
 
+        if (!inGameName) {
+            return res.status(400).json({ message: 'In-Game Name is required for admins' });
+        }
+
         // Hash password
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // Create new admin
+        // Create new admin - use In-Game Name as username if possible
         const admin = await User.create({
             name,
-            username,
+            username: inGameName || name, // Prioritize In-Game Name for username
             email,
             mobile,
             password: hashedPassword,
             role,
-            game
+            game,
+            inGameName,
+            inGameId,
+            collegeId,
+            bio,
+            isVerified: true
         });
 
         res.status(201).json({
@@ -211,7 +241,11 @@ router.post('/admins', protect, superAdmin, async (req, res) => {
             username: admin.username,
             email: admin.email,
             role: admin.role,
-            game: admin.game
+            game: admin.game,
+            inGameName: admin.inGameName,
+            inGameId: admin.inGameId,
+            collegeId: admin.collegeId,
+            bio: admin.bio
         });
     } catch (error) {
         res.status(500).json({ message: 'Server Error' });
@@ -228,11 +262,15 @@ router.put('/admins/:id', protect, superAdmin, async (req, res) => {
         if (admin) {
             // Update admin fields
             admin.name = req.body.name || admin.name;
-            admin.username = req.body.username || admin.username;
+            admin.username = req.body.inGameName || req.body.name || admin.username; // Keep username in sync with IGN or name
             admin.email = req.body.email || admin.email;
             admin.mobile = req.body.mobile || admin.mobile;
             admin.role = req.body.role || admin.role;
             admin.game = req.body.game || admin.game;
+            admin.inGameName = req.body.inGameName || admin.inGameName;
+            admin.inGameId = req.body.inGameId || admin.inGameId;
+            admin.collegeId = req.body.collegeId || admin.collegeId;
+            admin.bio = req.body.bio || admin.bio;
 
             // Update password if provided
             if (req.body.password) {
@@ -247,7 +285,11 @@ router.put('/admins/:id', protect, superAdmin, async (req, res) => {
                 username: updatedAdmin.username,
                 email: updatedAdmin.email,
                 role: updatedAdmin.role,
-                game: updatedAdmin.game
+                game: updatedAdmin.game,
+                inGameName: updatedAdmin.inGameName,
+                inGameId: updatedAdmin.inGameId,
+                collegeId: updatedAdmin.collegeId,
+                bio: updatedAdmin.bio
             });
         } else {
             res.status(404).json({ message: 'Admin not found' });
