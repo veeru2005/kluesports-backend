@@ -96,12 +96,11 @@ const getRichEmailTemplate = (title, message, otp, footerNote = "This code expir
 <body style="margin:0;padding:0;background-color:#09090b !important;font-family:Verdana,Arial,sans-serif;color:#d1d1d1 !important;-webkit-text-fill-color: #d1d1d1 !important;">
   <table role="presentation" class="outer-table" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#09090b !important; background-image: linear-gradient(#09090b, #09090b) !important;">
     <tr>
-      <td align="center" style="padding:0;background-color:#09090b !important; background-image: linear-gradient(#09090b, #09090b) !important;">
-        <div style="height:20px;line-height:20px;font-size:1px;background-color:#09090b !important; background-image: linear-gradient(#09090b, #09090b) !important;">&nbsp;</div>
+      <td align="center" style="padding: 40px 10px; background-color:#09090b !important; background-image: linear-gradient(#09090b, #09090b) !important;">
         <table role="presentation" class="main-table" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background-color:#121212 !important; background-image: linear-gradient(#121212, #121212) !important; border:2px solid #dc2626 !important;border-radius:12px;overflow:hidden;">
           <!-- TYPE BADGE -->
           <tr>
-            <td align="center" style="padding:15px 15px 0 15px; background-color: #121212 !important; background-image: linear-gradient(#121212, #121212) !important;">
+            <td align="center" style="padding:35px 15px 15px 15px; background-color: #121212 !important; background-image: linear-gradient(#121212, #121212) !important;">
               <div class="type-badge ios-white" style="display:inline-block;background-color:${config.badgeColor} !important;color:#fefefe !important;-webkit-text-fill-color: #fefefe !important;padding:8px 16px;border-radius:20px;font-size:12px;font-weight:bold;letter-spacing:0.5px;">
                 ${config.badge}
               </div>
@@ -109,8 +108,8 @@ const getRichEmailTemplate = (title, message, otp, footerNote = "This code expir
           </tr>
           <!-- HEADER -->
           <tr>
-            <td class="header-cell" align="center" style="padding:20px 30px 30px 30px;border-bottom:2px solid #dc2626 !important;background-color:#121212 !important; background-image: linear-gradient(#121212, #121212) !important;">
-              <img class="logo-img" src="https://res.cloudinary.com/dus3luhur/image/upload/v1769977067/Logo1_xdqj6d.png" width="80" height="80" alt="KLU ESPORTS" style="display:block;border-radius:50%;border:2px solid #dc2626 !important;margin:0 auto 15px auto;">
+            <td class="header-cell" align="center" style="padding:30px 30px 45px 30px;border-bottom:2px solid #dc2626 !important;background-color:#121212 !important; background-image: linear-gradient(#121212, #121212) !important;">
+              <img class="logo-img" src="https://res.cloudinary.com/dus3luhur/image/upload/v1769977067/Logo1_xdqj6d.png" width="80" height="80" alt="KLU ESPORTS" style="display:block;border-radius:50%;border:2px solid #dc2626 !important;margin:0 auto 20px auto;">
               <h1 class="title-text" style="margin:0;font-size:24px;letter-spacing:1px;color:#d1d1d1 !important;">
                 <span class="ios-white" style="color:#d1d1d1 !important;-webkit-text-fill-color: #d1d1d1 !important;font-weight: 900 !important;">KLU</span> <span style="color:#dc2626 !important;-webkit-text-fill-color: #dc2626 !important;font-weight: 900 !important;">ESPORTS</span>
               </h1>
@@ -124,9 +123,9 @@ const getRichEmailTemplate = (title, message, otp, footerNote = "This code expir
               </p>
               ${config.contextBox}
               <!-- OTP BOX -->
-              <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:20px auto 30px auto;max-width:100%;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:30px auto 40px auto;max-width:100%;">
                 <tr>
-                  <td align="center" style="background-color:#000000 !important; background-image: linear-gradient(#000000, #000000) !important;border:2px solid #dc2626 !important;border-radius:8px;padding:18px 20px;">
+                  <td align="center" style="background-color:#000000 !important; background-image: linear-gradient(#000000, #000000) !important;border:2px solid #dc2626 !important;border-radius:8px;padding:25px 35px;">
                     <span class="otp-text ios-white" style="color:#d1d1d1 !important;-webkit-text-fill-color: #d1d1d1 !important;font-size:36px;font-weight:bold;letter-spacing:8px;font-family:'Courier New',monospace;display:block;word-break:break-all;">${otp}</span>
                   </td>
                 </tr>
@@ -226,6 +225,11 @@ router.post('/otp/send', async (req, res) => {
 
     // Prepare identifier (lowercase and trim for consistency)
     identifier = identifier.toLowerCase().trim();
+
+    // Restricted to Gmail for signup
+    if (purpose === 'signup' && !identifier.endsWith('@gmail.com')) {
+      return res.status(400).json({ success: false, message: 'Only Gmail addresses are accepted for signup' });
+    }
 
     // Find User
     let user = await User.findOne({ email: identifier });
