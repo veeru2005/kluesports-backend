@@ -37,32 +37,12 @@ const generateContactEmailHTML = (name, email, subject, message) => {
       supported-color-schemes: only dark;
     }
     @media only screen and (max-width: 600px) {
-      .main-table {
-        border-radius: 8px !important;
-      }
-      .social-link {
-        margin: 0 2px !important;
-        font-size: 9px !important;
-        white-space: nowrap !important;
-      }
-      .social-icon {
-        width: 12px !important;
-        height: 12px !important;
-        margin-right: 2px !important;
-      }
-      .social-footer {
-        white-space: nowrap !important;
-        padding: 24px 10px !important;
-      }
+      .main-table { width: 100% !important; border-radius: 8px !important; }
+      .social-link { margin: 0 2px !important; font-size: 9px !important; white-space: nowrap !important; }
+      .social-icon { width: 12px !important; height: 12px !important; margin-right: 2px !important; }
+      .social-footer { white-space: nowrap !important; padding: 24px 10px !important; }
     }
-    /* Force dark mode on iOS */
-    @media (prefers-color-scheme: dark) {
-      body, .outer-table { background-color: #09090b !important; }
-      .main-table { background-color: #121212 !important; }
-      .inner-card { background-color: #0f0f0f !important; }
-    }
-    
-    /* iOS Inversion Prevention - High Contrast Visible Grey-White */
+    /* iOS Inversion Prevention */
     .ios-white {
       color: #71717a !important;
       -webkit-text-fill-color: #71717a !important;
@@ -75,11 +55,11 @@ const generateContactEmailHTML = (name, email, subject, message) => {
     <tr>
       <td align="center" style="padding:0;background-color:#09090b !important; background-image: linear-gradient(#09090b, #09090b) !important;">
         <div style="height:20px;line-height:20px;font-size:1px;background-color:#09090b !important; background-image: linear-gradient(#09090b, #09090b) !important;">&nbsp;</div>
-        <table role="presentation" class="main-table" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;background-color:#121212;border:2px solid #dc2626;border-radius:12px;overflow:hidden;box-shadow:0 0 30px rgba(220,38,38,0.35);">
+        <table role="presentation" class="main-table" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background-color:#121212 !important; background-image: linear-gradient(#121212, #121212) !important;border:2px solid #dc2626 !important;border-radius:12px;overflow:hidden;box-shadow:0 0 30px rgba(220,38,38,0.35);">
           
           <tr>
-            <td align="center" style="padding:30px;border-bottom:2px solid #dc2626;background-color:#121212 !important; background-image: linear-gradient(#121212, #121212) !important;">
-              <img src="https://res.cloudinary.com/dus3luhur/image/upload/v1769977067/Logo1_xdqj6d.png" width="80" height="80" alt="KLU Esports" style="display:block;border-radius:50%;border:2px solid #dc2626;margin-bottom:15px;">
+            <td align="center" style="padding:30px;border-bottom:2px solid #dc2626 !important;background-color:#121212 !important; background-image: linear-gradient(#121212, #121212) !important;">
+              <img src="https://res.cloudinary.com/dus3luhur/image/upload/v1769977067/Logo1_xdqj6d.png" width="80" height="80" alt="KLU Esports" style="display:block;border-radius:50%;border:2px solid #dc2626 !important;margin-bottom:15px;">
               <h1 class="ios-white" style="margin:0;font-size:24px;letter-spacing:1px;color:#d1d1d1 !important;-webkit-text-fill-color: #d1d1d1 !important;font-weight: 900 !important;">
                 KLU <span style="color:#dc2626 !important;-webkit-text-fill-color: #dc2626 !important;">ESPORTS</span>
               </h1>
@@ -88,11 +68,11 @@ const generateContactEmailHTML = (name, email, subject, message) => {
           </tr>
 
           <tr>
-            <td style="padding:35px 25px;background-color:#121212;">
-              <table role="presentation" class="inner-card" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#0f0f0f;border:1px solid #dc2626;border-radius:8px;margin-bottom:25px;">
+            <td style="padding:35px 25px;background-color:#121212 !important; background-image: linear-gradient(#121212, #121212) !important;">
+              <table role="presentation" class="inner-card" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#0f0f0f !important; background-image: linear-gradient(#0f0f0f, #0f0f0f) !important;border:1px solid #dc2626 !important;border-radius:8px;margin-bottom:25px;">
                 <tr>
-                  <td style="padding:20px;background-color:#0f0f0f;">
-                    <h2 style="margin:0 0 15px 0;font-size:16px;color:#dc2626;text-transform:uppercase;border-bottom:1px solid #333;padding-bottom:8px;">Sender Details</h2>
+                  <td style="padding:20px;background-color:#0f0f0f !important; background-image: linear-gradient(#0f0f0f, #0f0f0f) !important;">
+                    <h2 style="margin:0 0 15px 0;font-size:16px;color:#dc2626 !important;-webkit-text-fill-color: #dc2626 !important;text-transform:uppercase;border-bottom:1px solid #333;padding-bottom:8px;font-weight: 900 !important;">Sender Details</h2>
                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                       <tr>
                         <td style="padding:6px 0;color:#71717a !important;-webkit-text-fill-color: #71717a !important;font-size:14px;width:90px;">Name:</td>
@@ -113,7 +93,7 @@ const generateContactEmailHTML = (name, email, subject, message) => {
                 </tr>
               </table>
 
-              <table role="presentation" class="inner-card" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#0f0f0f;border:1px solid #dc2626;border-radius:8px;">
+              <table role="presentation" class="inner-card" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#0f0f0f !important; background-image: linear-gradient(#0f0f0f, #0f0f0f) !important;border:1px solid #dc2626 !important;border-radius:8px;">
                 <tr>
                   <td style="padding:20px;background-color:#0f0f0f !important; background-image: linear-gradient(#0f0f0f, #0f0f0f) !important;">
                     <h2 style="margin:0 0 15px 0;font-size:16px;color:#dc2626 !important;-webkit-text-fill-color: #dc2626 !important;text-transform:uppercase;border-bottom:1px solid #333;padding-bottom:8px;font-weight: 900 !important;">Message</h2>
@@ -129,25 +109,25 @@ const generateContactEmailHTML = (name, email, subject, message) => {
           </tr>
 
           <tr>
-            <td class="footer-cell" align="center" style="padding:24px 15px;background-color:#0f0f0f;border-top:2px solid #dc2626;">
+            <td class="footer-cell" align="center" style="padding:24px 15px;background-color:#0f0f0f !important; background-image: linear-gradient(#0f0f0f, #0f0f0f) !important;border-top:2px solid #dc2626 !important;">
                <div style="margin-bottom: 10px;white-space:nowrap;">
-                  <a href="https://www.instagram.com/klu__esports/" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626; font-size: 11px;white-space:nowrap;">
+                  <a href="https://www.instagram.com/klu__esports/" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626 !important; font-size: 11px;white-space:nowrap;">
                       <img class="social-icon" src="https://cdn-icons-png.flaticon.com/128/174/174855.png" alt="Instagram" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;">Instagram
                   </a>
-                  <span style="color:#71717a;">|</span>
-                  <a href="https://discord.com/invite/pp9wnEjbt" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626; font-size: 11px;white-space:nowrap;">
+                  <span style="color:#71717a !important;">|</span>
+                  <a href="https://discord.com/invite/pp9wnEjbt" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626 !important; font-size: 11px;white-space:nowrap;">
                       <img class="social-icon" src="https://cdn-icons-png.flaticon.com/128/5968/5968756.png" alt="Discord" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;">Discord
                   </a>
-                  <span style="color:#71717a;">|</span>
-                  <a href="https://www.youtube.com/@esports.kluniversity" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626; font-size: 11px;white-space:nowrap;">
+                  <span style="color:#71717a !important;">|</span>
+                  <a href="https://www.youtube.com/@esports.kluniversity" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626 !important; font-size: 11px;white-space:nowrap;">
                       <img class="social-icon" src="https://cdn-icons-png.flaticon.com/128/1384/1384060.png" alt="YouTube" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;">YouTube
                   </a>
-                  <span style="color:#71717a;">|</span>
-                  <a href="https://www.linkedin.com/company/kl-esports-club" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626; font-size: 11px;white-space:nowrap;">
+                  <span style="color:#71717a !important;">|</span>
+                  <a href="https://www.linkedin.com/company/kl-esports-club" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626 !important; font-size: 11px;white-space:nowrap;">
                       <img class="social-icon" src="https://cdn-icons-png.flaticon.com/128/174/174857.png" alt="LinkedIn" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;">LinkedIn
                   </a>
               </div>
-              <p style="color:#71717a !important;-webkit-text-fill-color: #71717a !important;font-size:12px;margin:15px 0 0 0;padding:0 10px;line-height:1.5;">© 2026 KLU Esports Club. All rights reserved.</p>
+              <p style="color:#71717a !important;-webkit-text-fill-color: #71717a !important;font-size:12px;margin:15px 0 0 0;padding:0 10px;line-height:1.5;">© 2026 KLU ESPORTS CLUB. All rights reserved.</p>
               <p style="color:#71717a !important;-webkit-text-fill-color: #71717a !important;font-size:10px;margin:8px 0 0 0;padding:0 10px;line-height:1.5;white-space:nowrap;">Designed and Developed by <span style="color:#dc2626 !important;-webkit-text-fill-color: #dc2626 !important;">S. Veerendra Chowdary</span></p>
             </td>
           </tr>
@@ -171,110 +151,94 @@ const generateConfirmationEmailHTML = (name) => {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="color-scheme" content="light dark">
-      <meta name="supported-color-schemes" content="light dark">
-      <title>Message Received - KLU Esports</title>
-      <style>
-        :root {
-          color-scheme: light dark;
-          supported-color-schemes: light dark;
-        }
-        @media only screen and (max-width: 600px) {
-          .main-table {
-            border-radius: 8px !important;
-          }
-          .social-link {
-            margin: 0 2px !important;
-            font-size: 9px !important;
-            white-space: nowrap !important;
-          }
-          .social-icon {
-            width: 12px !important;
-            height: 12px !important;
-            margin-right: 2px !important;
-          }
-          .social-footer {
-            white-space: nowrap !important;
-            padding: 24px 10px !important;
-          }
-          .greeting-text {
-            line-height: 1.4 !important;
-            margin: 0 0 20px 0 !important;
-          }
-        }
-        /* Force dark mode on iOS */
-        @media (prefers-color-scheme: dark) {
-          body, .outer-table { background-color: #09090b !important; }
-          .main-table { background-color: #121212 !important; }
-          .inner-card { background-color: #0f0f0f !important; }
-        }
-      </style>
+    <meta name="color-scheme" content="only dark">
+    <meta name="supported-color-schemes" content="only dark">
+    <title>Message Received - KLU Esports</title>
+    <style>
+      :root {
+        color-scheme: only dark;
+        supported-color-schemes: only dark;
+      }
+      @media only screen and (max-width: 600px) {
+        .main-table { width: 100% !important; border-radius: 8px !important; }
+        .social-link { margin: 0 2px !important; font-size: 9px !important; white-space: nowrap !important; }
+        .social-icon { width: 12px !important; height: 12px !important; margin-right: 2px !important; }
+        .social-footer { white-space: nowrap !important; padding: 24px 10px !important; }
+        .greeting-text { line-height: 1.4 !important; margin: 0 0 20px 0 !important; }
+      }
+      /* iOS Inversion Prevention */
+      .ios-white {
+        color: #71717a !important;
+        -webkit-text-fill-color: #71717a !important;
+        opacity: 1 !important;
+      }
+    </style>
 </head>
-<body style="margin: 0; padding: 0; font-family: 'Verdana',Arial,sans-serif; background-color: #09090b !important; color: #d1d1d1 !important;-webkit-text-fill-color: #d1d1d1 !important;">
-    <table role="presentation" class="outer-table" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #09090b !important; background-image: linear-gradient(#09090b, #09090b) !important;">
+<body style="margin:0;padding:0;font-family:Verdana,Arial,sans-serif;background-color:#09090b !important;color:#d1d1d1 !important;-webkit-text-fill-color: #d1d1d1 !important;">
+    <table role="presentation" class="outer-table" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:#09090b !important; background-image: linear-gradient(#09090b, #09090b) !important;">
         <tr>
-            <td align="center" style="padding:0; background-color: #09090b !important; background-image: linear-gradient(#09090b, #09090b) !important;">
+            <td align="center" style="padding:0;background-color:#09090b !important; background-image: linear-gradient(#09090b, #09090b) !important;">
                 <div style="height:20px;line-height:20px;font-size:1px;background-color:#09090b !important; background-image: linear-gradient(#09090b, #09090b) !important;">&nbsp;</div>
                 <table role="presentation" class="main-table" width="600" cellspacing="0" cellpadding="0" border="0" 
-                    style="background-color: #121212 !important; 
+                    style="max-width:600px;width:100%;background-color:#121212 !important; 
                            background-image: linear-gradient(#121212, #121212) !important;
-                           border: 2px solid #dc2626; 
+                           border: 2px solid #dc2626 !important; 
                            border-radius: 12px; 
                            overflow: hidden; 
                            box-shadow: 0 0 30px rgba(220, 38, 38, 0.35);
                            margin: 0 auto;">
                     
                     <tr>
-                        <td align="center" style="padding: 30px; background-color: #121212 !important; background-image: linear-gradient(#121212, #121212) !important; border-bottom: 2px solid #dc2626;">
-                            <img src="https://res.cloudinary.com/dus3luhur/image/upload/v1769977067/Logo1_xdqj6d.png" alt="KLU Esports" style="width: 80px; height: 80px; border-radius: 50%; border: 2px solid #dc2626; margin-bottom: 15px; display: block;">
-                            <h1 class="ios-white" style="color: #d1d1d1 !important; -webkit-text-fill-color: #d1d1d1 !important; font-size: 24px; font-weight: 900 !important; margin: 0; text-transform: uppercase; letter-spacing: 1px;">KLU <span style="color: #dc2626 !important; -webkit-text-fill-color: #dc2626 !important; text-shadow: 0 0 10px rgba(220, 38, 38, 0.5);">Esports</span></h1>
+                        <td align="center" style="padding:30px;background-color:#121212 !important; background-image: linear-gradient(#121212, #121212) !important;border-bottom:2px solid #dc2626 !important;">
+                            <img src="https://res.cloudinary.com/dus3luhur/image/upload/v1769977067/Logo1_xdqj6d.png" alt="KLU Esports" style="width:80px;height:80px;border-radius:50%;border:2px solid #dc2626 !important;margin-bottom:15px;display:block;">
+                            <h1 class="ios-white" style="color:#d1d1d1 !important;-webkit-text-fill-color: #d1d1d1 !important;font-size:24px;font-weight:900 !important;margin:0;text-transform:uppercase;letter-spacing:1px;">KLU <span style="color:#dc2626 !important;-webkit-text-fill-color: #dc2626 !important;">Esports</span></h1>
                         </td>
                     </tr>
 
                     <tr>
-                        <td align="center" style="padding: 40px 30px; background-color: #121212;">
-                            <div style="width: 80px; height: 80px; background: linear-gradient(145deg, #22c55e, #16a34a); border-radius: 50%; display: inline-block; text-align: center; line-height: 80px; margin-bottom: 25px; box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);">
-                                <img src="https://cdn-icons-png.flaticon.com/128/447/447147.png" alt="✓" style="width: 36px; height: 36px; vertical-align: middle;">
+                        <td align="center" style="padding:40px 30px;background-color:#121212 !important; background-image: linear-gradient(#121212, #121212) !important;">
+                            <div style="width:80px;height:80px;background:linear-gradient(145deg, #22c55e, #16a34a);border-radius:50%;display:inline-block;text-align:center;line-height:80px;margin-bottom:25px;box-shadow:0 0 20px rgba(34, 197, 94, 0.3);">
+                                <img src="https://cdn-icons-png.flaticon.com/128/447/447147.png" alt="✓" style="width:36px;height:36px;vertical-align:middle;">
                             </div>
                             
-                            <h2 class="ios-white" style="color: #d1d1d1 !important; -webkit-text-fill-color: #d1d1d1 !important; font-size: 22px; margin: 0 0 15px 0; font-weight: 900 !important;">📬 Message Received!</h2>
+                            <h2 class="ios-white" style="color:#d1d1d1 !important;-webkit-text-fill-color: #d1d1d1 !important;font-size:22px;margin:0 0 15px 0;font-weight:900 !important;">📬 Message Received!</h2>
                             
-                            <p class="ios-white" style="color: #d1d1d1 !important; -webkit-text-fill-color: #d1d1d1 !important; font-size: 16px; line-height: 1.6; margin: 0 0 25px 0; font-weight: 500 !important;">
-                                Hey <span style="color: #dc2626 !important; -webkit-text-fill-color: #dc2626 !important; font-weight: 900 !important;">${name}</span>, Thank you for reaching out to KLU ESPORTS! We've received your message and our team will get back to you as soon as possible.
+                            <p class="ios-white" style="color:#d1d1d1 !important;-webkit-text-fill-color: #d1d1d1 !important;font-size:16px;line-height:1.6;margin:0 0 25px 0;font-weight:500 !important;">
+                                Hey <span style="color:#dc2626 !important;-webkit-text-fill-color: #dc2626 !important;font-weight:900 !important;">${name}</span>, Thank you for reaching out to KLU ESPORTS! We've received your message and our team will get back to you as soon as possible.
                             </p>
                             
-                            <div class="inner-card" style="background-color: #0f0f0f; border: 1px solid #dc2626; border-radius: 8px; padding: 20px; margin-bottom: 25px;">
-                                <p style="color: #71717a !important; -webkit-text-fill-color: #71717a !important; font-size: 14px; margin: 0; background-color: #0f0f0f;">
-                                    💡 <span class="ios-white" style="color: #d1d1d1 !important; -webkit-text-fill-color: #d1d1d1 !important; background-color: #0f0f0f;">Typical response time: 24-48 hours</span>
+                            <div class="inner-card" style="background-color:#0f0f0f !important; background-image: linear-gradient(#0f0f0f, #0f0f0f) !important;border:1px solid #dc2626 !important;border-radius:8px;padding:20px;margin-bottom:25px;">
+                                <p style="color:#71717a !important;-webkit-text-fill-color: #71717a !important;font-size:14px;margin:0;background-color:#0f0f0f !important; background-image: linear-gradient(#0f0f0f, #0f0f0f) !important;">
+                                    💡 <span class="ios-white" style="color:#d1d1d1 !important;-webkit-text-fill-color: #d1d1d1 !important;">Typical response time: 24-48 hours</span>
                                 </p>
                             </div>
                             
-                            <div style="color: #a1a1aa !important;-webkit-text-fill-color: #a1a1aa !important; font-size: 14px; margin: 0;">
+                            <div style="color:#a1a1aa !important;-webkit-text-fill-color: #a1a1aa !important;font-size:14px;margin:0;">
                                 In the meantime, feel free to explore our events and join our gaming community!
                             </div>
                         </td>
                     </tr>
 
                     <tr>
-                         <td class="footer-cell" align="center" style="padding:24px 15px;background-color:#0f0f0f;border-top:2px solid #dc2626;">
+                        <td class="footer-cell" align="center" style="padding:24px 15px;background-color:#0f0f0f !important; background-image: linear-gradient(#0f0f0f, #0f0f0f) !important;border-top:2px solid #dc2626 !important;">
                <div style="margin-bottom: 10px;white-space:nowrap;">
-                  <a href="https://www.instagram.com/klu__esports/" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626; font-size: 11px;white-space:nowrap;">
+                  <a href="https://www.instagram.com/klu__esports/" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626 !important; font-size: 11px;white-space:nowrap;">
                       <img class="social-icon" src="https://cdn-icons-png.flaticon.com/128/174/174855.png" alt="Instagram" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;">Instagram
                   </a>
-                  <span style="color:#71717a;">|</span>
-                  <a href="https://discord.com/invite/pp9wnEjbt" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626; font-size: 11px;white-space:nowrap;">
+                  <span style="color:#71717a !important;">|</span>
+                  <a href="https://discord.com/invite/pp9wnEjbt" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626 !important; font-size: 11px;white-space:nowrap;">
                       <img class="social-icon" src="https://cdn-icons-png.flaticon.com/128/5968/5968756.png" alt="Discord" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;">Discord
                   </a>
-                  <span style="color:#71717a;">|</span>
-                  <a href="https://www.youtube.com/@esports.kluniversity" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626; font-size: 11px;white-space:nowrap;">
+                  <span style="color:#71717a !important;">|</span>
+                  <a href="https://www.youtube.com/@esports.kluniversity" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626 !important; font-size: 11px;white-space:nowrap;">
                       <img class="social-icon" src="https://cdn-icons-png.flaticon.com/128/1384/1384060.png" alt="YouTube" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;">YouTube
                   </a>
-                  <span style="color:#71717a;">|</span>
-                  <a href="https://www.linkedin.com/company/kl-esports-club" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626; font-size: 11px;white-space:nowrap;">
+                  <span style="color:#71717a !important;">|</span>
+                  <a href="https://www.linkedin.com/company/kl-esports-club" class="social-link" style="margin: 0 4px; text-decoration: none; display: inline-block; color: #dc2626 !important; font-size: 11px;white-space:nowrap;">
                       <img class="social-icon" src="https://cdn-icons-png.flaticon.com/128/174/174857.png" alt="LinkedIn" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;">LinkedIn
                   </a>
               </div>
-              <p style="color:#71717a !important;-webkit-text-fill-color: #71717a !important;font-size:12px;margin:15px 0 0 0;padding:0 10px;line-height:1.5;">© 2026 KLU Esports Club. All rights reserved.</p>
+              <p style="color:#71717a !important;-webkit-text-fill-color: #71717a !important;font-size:12px;margin:15px 0 0 0;padding:0 10px;line-height:1.5;">© 2026 KLU ESPORTS CLUB. All rights reserved.</p>
               <p style="color:#71717a !important;-webkit-text-fill-color: #71717a !important;font-size:10px;margin:8px 0 0 0;padding:0 10px;line-height:1.5;white-space:nowrap;">Designed and Developed by <span style="color:#dc2626 !important;-webkit-text-fill-color: #dc2626 !important;">S. Veerendra Chowdary</span></p>
             </td>
                     </tr>

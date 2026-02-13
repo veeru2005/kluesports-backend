@@ -159,7 +159,7 @@ const getRichEmailTemplate = (title, message, otp, footerNote = "This code expir
                       <img class="social-icon" src="https://cdn-icons-png.flaticon.com/128/174/174857.png" alt="LinkedIn" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;">LinkedIn
                   </a>
               </div>
-              <p style="color:#71717a !important;font-size:12px;margin:15px 0 0 0;padding:0 10px;line-height:1.5;">© 2026 KLU Esports Club. All rights reserved.</p>
+              <p style="color:#71717a !important;font-size:12px;margin:15px 0 0 0;padding:0 10px;line-height:1.5;">© 2026 KLU ESPORTS CLUB. All rights reserved.</p>
               <p style="color:#71717a !important;font-size:10px;margin:8px 0 0 0;padding:0 10px;line-height:1.5;white-space:nowrap;">Designed and Developed by <span style="color:#dc2626 !important;">S. Veerendra Chowdary</span></p>
             </td>
           </tr>

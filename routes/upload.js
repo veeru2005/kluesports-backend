@@ -17,7 +17,7 @@ const storage = multer.memoryStorage();
 const upload = multer({
     storage: storage,
     limits: {
-        fileSize: 15 * 1024 * 1024 // 15MB limit
+        fileSize: 10 * 1024 * 1024 // 10MB limit
     },
     fileFilter: (req, file, cb) => {
         if (file.mimetype.startsWith('image/')) {
@@ -35,7 +35,7 @@ router.post('/event-image', protect, admin, (req, res, next) => {
     upload.single('image')(req, res, (err) => {
         if (err instanceof multer.MulterError) {
             if (err.code === 'LIMIT_FILE_SIZE') {
-                return res.status(400).json({ message: 'Image size should be 15MB only Max' });
+                return res.status(400).json({ message: 'Image size should be 10MB only' });
             }
             return res.status(400).json({ message: err.message });
         } else if (err) {
@@ -94,7 +94,7 @@ router.post('/team-logo', protect, (req, res, next) => {
     upload.single('image')(req, res, (err) => {
         if (err instanceof multer.MulterError) {
             if (err.code === 'LIMIT_FILE_SIZE') {
-                return res.status(400).json({ message: 'Image size should be 15MB only Max' });
+                return res.status(400).json({ message: 'Image size should be 10MB only' });
             }
             return res.status(400).json({ message: err.message });
         } else if (err) {
