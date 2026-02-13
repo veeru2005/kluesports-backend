@@ -24,7 +24,7 @@ const eventSchema = new mongoose.Schema({
     },
     game: {
         type: String,
-        enum: ['Free Fire', 'BGMI', 'Valorant', 'Call Of Duty', 'All'],
+        enum: ['Free Fire', 'BGMI', 'Valorant', 'Call Of Duty', 'All', 'OTHERS'],
         default: 'All'
     },
     max_participants: {

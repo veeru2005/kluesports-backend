@@ -46,7 +46,7 @@ const userSchema = new mongoose.Schema({
     },
     gameYouPlay: { // For user
         type: String,
-        enum: ['Free Fire', 'BGMI', 'Valorant', 'Call Of Duty']
+        enum: ['Free Fire', 'BGMI', 'Valorant', 'Call Of Duty', 'OTHERS']
     },
     otp: {
         type: String
