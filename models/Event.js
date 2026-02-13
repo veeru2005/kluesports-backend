@@ -15,7 +15,8 @@ const eventSchema = new mongoose.Schema({
         required: true
     },
     end_time: {
-        type: Date
+        type: Date,
+        required: true
     },
     location: {
         type: String,
@@ -34,7 +35,7 @@ const eventSchema = new mongoose.Schema({
     },
     is_registration_open: {
         type: Boolean,
-        default: true
+        default: false
     }
 }, {
     timestamps: true
