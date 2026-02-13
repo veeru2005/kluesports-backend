@@ -73,6 +73,22 @@ router.put('/profile', protect, async (req, res) => {
         const user = await User.findById(req.user._id);
 
         if (user) {
+            // Check for duplicate collegeId
+            if (req.body.collegeId && req.body.collegeId !== user.collegeId) {
+                const collegeIdExists = await User.findOne({ collegeId: req.body.collegeId });
+                if (collegeIdExists) {
+                    return res.status(400).json({ message: 'User with this College ID already exists' });
+                }
+            }
+
+            // Check for duplicate inGameId
+            if (req.body.inGameId && req.body.inGameId !== user.inGameId) {
+                const inGameIdExists = await User.findOne({ inGameId: req.body.inGameId });
+                if (inGameIdExists) {
+                    return res.status(400).json({ message: 'User with this In-Game ID already exists' });
+                }
+            }
+
             user.name = req.body.full_name || user.name;
             user.username = req.body.username || user.username;
             user.inGameName = req.body.inGameName || user.inGameName;
@@ -120,6 +136,22 @@ router.put('/:id', protect, superAdmin, async (req, res) => {
         const user = await User.findById(req.params.id);
 
         if (user) {
+            // Check for duplicate collegeId
+            if (req.body.collegeId && req.body.collegeId !== user.collegeId) {
+                const collegeIdExists = await User.findOne({ collegeId: req.body.collegeId });
+                if (collegeIdExists) {
+                    return res.status(400).json({ message: 'User with this College ID already exists' });
+                }
+            }
+
+            // Check for duplicate inGameId
+            if (req.body.inGameId && req.body.inGameId !== user.inGameId) {
+                const inGameIdExists = await User.findOne({ inGameId: req.body.inGameId });
+                if (inGameIdExists) {
+                    return res.status(400).json({ message: 'User with this In-Game ID already exists' });
+                }
+            }
+
             // Allow updating all fields
             user.name = req.body.name || user.name;
             user.username = req.body.username || user.username;
@@ -205,6 +237,22 @@ router.post('/admins', protect, superAdmin, async (req, res) => {
             return res.status(400).json({ message: 'User with this email already exists' });
         }
 
+        // Check if collegeId exists
+        if (collegeId) {
+            const collegeIdExists = await User.findOne({ collegeId });
+            if (collegeIdExists) {
+                return res.status(400).json({ message: 'User with this College ID already exists' });
+            }
+        }
+
+        // Check if inGameId exists
+        if (inGameId) {
+            const inGameIdExists = await User.findOne({ inGameId });
+            if (inGameIdExists) {
+                return res.status(400).json({ message: 'User with this In-Game ID already exists' });
+            }
+        }
+
         // Validate role
         const validAdminRoles = ['admin_freefire', 'admin_bgmi', 'admin_valorant', 'admin_call_of_duty'];
         if (!validAdminRoles.includes(role)) {
@@ -260,6 +308,22 @@ router.put('/admins/:id', protect, superAdmin, async (req, res) => {
         const admin = await User.findById(req.params.id);
 
         if (admin) {
+            // Check for duplicate collegeId
+            if (req.body.collegeId && req.body.collegeId !== admin.collegeId) {
+                const collegeIdExists = await User.findOne({ collegeId: req.body.collegeId });
+                if (collegeIdExists) {
+                    return res.status(400).json({ message: 'User with this College ID already exists' });
+                }
+            }
+
+            // Check for duplicate inGameId
+            if (req.body.inGameId && req.body.inGameId !== admin.inGameId) {
+                const inGameIdExists = await User.findOne({ inGameId: req.body.inGameId });
+                if (inGameIdExists) {
+                    return res.status(400).json({ message: 'User with this In-Game ID already exists' });
+                }
+            }
+
             // Update admin fields
             admin.name = req.body.name || admin.name;
             admin.username = req.body.inGameName || req.body.name || admin.username; // Keep username in sync with IGN or name

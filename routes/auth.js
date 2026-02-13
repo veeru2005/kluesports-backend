@@ -370,6 +370,23 @@ router.post('/otp/verify', async (req, res) => {
 
     // OTP Verified. Handle Signup Data Update if needed.
     if (purpose === 'signup' && userData) {
+
+      // Check for duplicate College ID
+      if (userData.collegeId) {
+        const existingCollegeId = await User.findOne({ collegeId: userData.collegeId });
+        if (existingCollegeId && existingCollegeId._id.toString() !== user._id.toString()) {
+          return res.status(400).json({ success: false, message: 'College ID already registered with another account' });
+        }
+      }
+
+      // Check for duplicate In-Game ID
+      if (userData.inGameId) {
+        const existingInGameId = await User.findOne({ inGameId: userData.inGameId });
+        if (existingInGameId && existingInGameId._id.toString() !== user._id.toString()) {
+          return res.status(400).json({ success: false, message: 'In-Game ID already registered with another account' });
+        }
+      }
+
       // Fallback for username
       const finalUsername = userData.username || userData.inGameName || identifier.split('@')[0];
 
