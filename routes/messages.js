@@ -4,6 +4,7 @@ const Message = require('../models/Message');
 // const nodemailer = require('nodemailer');
 const sendEmail = require('../utils/sendEmail');
 const { protect, admin, superAdmin } = require('../middleware/authMiddleware');
+const recipients = require('../config/contactRecipients.json');
 
 // Email transporter configuration
 /*
@@ -152,6 +153,7 @@ const generateContactEmailHTML = (name, email, subject, message) => {
           </tr>
 
         </table>
+        <div style="height:40px;line-height:40px;font-size:1px;background-color:#09090b !important; background-image: linear-gradient(#09090b, #09090b) !important;">&nbsp;</div>
       </td>
     </tr>
   </table>
@@ -277,6 +279,7 @@ const generateConfirmationEmailHTML = (name) => {
             </td>
                     </tr>
                 </table>
+                <div style="height:40px;line-height:40px;font-size:1px;background-color:#09090b !important; background-image: linear-gradient(#09090b, #09090b) !important;">&nbsp;</div>
             </td>
         </tr>
     </table>
@@ -308,20 +311,31 @@ router.post('/', async (req, res) => {
 
     const createdMessage = await newMessage.save();
 
-    // Send email to admin
-    // Send both emails
-    await Promise.all([
-      sendEmail(
-        process.env.EMAIL_USER,
-        `New Contact Message: ${subject || 'No Subject'} - from ${name}`,
-        generateContactEmailHTML(name, email, subject, message)
-      ),
-      sendEmail(
-        email,
-        'We received your message! - KLU Esports',
-        generateConfirmationEmailHTML(name)
-      )
-    ]);
+    // Send emails in background - don't let email failure block message saving
+    try {
+      // Use recipients from config, or fallback to single admin email
+      const adminEmails = (recipients && recipients.length > 0)
+        ? recipients
+        : [process.env.EMAIL_USER || process.env.SENDER_EMAIL];
+
+      await Promise.all([
+        // Send notification to all admins (sendEmail handles array)
+        sendEmail(
+          adminEmails,
+          `New Contact Message: ${subject || 'No Subject'} - from ${name}`,
+          generateContactEmailHTML(name, email, subject, message)
+        ),
+        // Send confirmation to the person who sent the message
+        sendEmail(
+          email,
+          'We received your message! - KLU Esports',
+          generateConfirmationEmailHTML(name)
+        )
+      ]);
+    } catch (emailError) {
+      console.error('Email notification failed:', emailError);
+      // We don't throw here so the user still sees success since message is saved to DB
+    }
 
     res.status(201).json({
       success: true,

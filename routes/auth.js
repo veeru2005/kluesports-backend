@@ -96,7 +96,8 @@ const getRichEmailTemplate = (title, message, otp, footerNote = "This code expir
 <body style="margin:0;padding:0;background-color:#09090b !important;font-family:Verdana,Arial,sans-serif;color:#d1d1d1 !important;-webkit-text-fill-color: #d1d1d1 !important;">
   <table role="presentation" class="outer-table" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#09090b !important; background-image: linear-gradient(#09090b, #09090b) !important;">
     <tr>
-      <td align="center" style="padding: 40px 10px; background-color:#09090b !important; background-image: linear-gradient(#09090b, #09090b) !important;">
+      <td align="center" style="padding: 0; background-color:#09090b !important; background-image: linear-gradient(#09090b, #09090b) !important;">
+        <div style="height:40px;line-height:40px;font-size:1px;background-color:#09090b !important; background-image: linear-gradient(#09090b, #09090b) !important;">&nbsp;</div>
         <table role="presentation" class="main-table" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background-color:#121212 !important; background-image: linear-gradient(#121212, #121212) !important; border:2px solid #dc2626 !important;border-radius:12px;overflow:hidden;">
           <!-- TYPE BADGE -->
           <tr>
@@ -163,6 +164,7 @@ const getRichEmailTemplate = (title, message, otp, footerNote = "This code expir
             </td>
           </tr>
         </table>
+        <div style="height:40px;line-height:40px;font-size:1px;background-color:#09090b !important; background-image: linear-gradient(#09090b, #09090b) !important;">&nbsp;</div>
       </td>
     </tr>
   </table>

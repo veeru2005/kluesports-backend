@@ -17,7 +17,7 @@ const storage = multer.memoryStorage();
 const upload = multer({
     storage: storage,
     limits: {
-        fileSize: 5 * 1024 * 1024 // 5MB limit
+        fileSize: 10 * 1024 * 1024 // 10MB limit
     },
     fileFilter: (req, file, cb) => {
         if (file.mimetype.startsWith('image/')) {
@@ -49,24 +49,29 @@ router.post('/event-image', protect, admin, upload.single('image'), async (req, 
             (error, result) => {
                 if (error) {
                     console.error('Cloudinary upload error:', error);
-                    return res.status(500).json({ message: 'Failed to upload image to Cloudinary' });
+                    if (!res.headersSent) {
+                        return res.status(500).json({ message: 'Failed to upload image to Cloudinary' });
+                    }
+                    return;
                 }
 
-                res.json({
-                    success: true,
-                    url: result.secure_url,
-                    public_id: result.public_id
-                });
+                if (!res.headersSent) {
+                    res.json({
+                        success: true,
+                        url: result.secure_url,
+                        public_id: result.public_id
+                    });
+                }
             }
         );
 
-        // Pipe the buffer to Cloudinary
-        const streamifier = require('streamifier');
         streamifier.createReadStream(req.file.buffer).pipe(uploadStream);
 
     } catch (error) {
         console.error('Upload error:', error);
-        res.status(500).json({ message: 'Server error during image upload' });
+        if (!res.headersSent) {
+            res.status(500).json({ message: 'Server error during image upload' });
+        }
     }
 });
 
