@@ -433,12 +433,27 @@ router.put('/:id/status', protect, admin, async (req, res) => {
     }
 });
 
+// Helper to validate game admin access
+const validateGameAccess = (user, game) => {
+    if (user.role === 'super_admin') return true;
+    if (user.role === 'admin_freefire' && game === 'Free Fire') return true;
+    if (user.role === 'admin_bgmi' && game === 'BGMI') return true;
+    if (user.role === 'admin_valorant' && game === 'Valorant') return true;
+    if (user.role === 'admin_call_of_duty' && game === 'Call Of Duty') return true;
+    return false;
+};
+
 // @desc    Delete all registrations for an event
 // @route   DELETE /api/registrations/event/:eventId
-// @access  Private/SuperAdmin
-router.delete('/event/:eventId', protect, superAdmin, async (req, res) => {
+// @access  Private/Admin or SuperAdmin
+router.delete('/event/:eventId', protect, admin, async (req, res) => {
     try {
         const { game } = req.query;
+
+        if (req.user.role !== 'super_admin' && (!game || !validateGameAccess(req.user, game))) {
+            return res.status(403).json({ message: 'Not authorized to delete registrations for this game' });
+        }
+
         let deletedCount = 0;
 
         if (!game || game === 'All') {
@@ -473,10 +488,15 @@ router.delete('/event/:eventId', protect, superAdmin, async (req, res) => {
 
 // @desc    Delete registration
 // @route   DELETE /api/registrations/:id
-// @access  Private/SuperAdmin
-router.delete('/:id', protect, superAdmin, async (req, res) => {
+// @access  Private/Admin or SuperAdmin
+router.delete('/:id', protect, admin, async (req, res) => {
     try {
         const { game } = req.query;
+
+        if (req.user.role !== 'super_admin' && (!game || !validateGameAccess(req.user, game))) {
+            return res.status(403).json({ message: 'Not authorized to delete registrations for this game' });
+        }
+
         const Model = getModelByGame(game);
 
         if (!Model) {

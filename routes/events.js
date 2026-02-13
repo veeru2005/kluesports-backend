@@ -109,13 +109,18 @@ const User = require('../models/User');
 
 // @desc    Delete an event
 // @route   DELETE /api/events/:id
-// @access  Private/SuperAdmin
-router.delete('/:id', protect, superAdmin, async (req, res) => {
+// @access  Private/Admin or SuperAdmin
+router.delete('/:id', protect, admin, async (req, res) => {
     try {
         const eventId = req.params.id;
         const event = await Event.findById(eventId);
 
         if (event) {
+            // Validate access
+            if (!validateGameAccess(req.user, event.game)) {
+                return res.status(403).json({ message: 'Not authorized to delete events for this game' });
+            }
+
             // Remove this event from all user profiles' registrations array
             await User.updateMany(
                 { 'registrations.eventId': eventId },

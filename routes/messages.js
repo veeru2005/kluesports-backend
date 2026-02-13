@@ -326,8 +326,8 @@ router.get('/', protect, admin, async (req, res) => {
 
 // @desc    Delete a message
 // @route   DELETE /api/messages/:id
-// @access  Private/SuperAdmin
-router.delete('/:id', protect, superAdmin, async (req, res) => {
+// @access  Private/Admin
+router.delete('/:id', protect, admin, async (req, res) => {
   try {
     const message = await Message.findById(req.params.id);
 
