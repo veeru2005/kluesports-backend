@@ -216,6 +216,38 @@ const transporter = nodemailer.createTransport({
 });
 */
 
+// POST /api/auth/check-signup
+// @desc    Check if email or collegeId already exist before signup
+router.post('/check-signup', async (req, res) => {
+  try {
+    const { email, collegeId } = req.body;
+    const errors = {};
+
+    if (email) {
+      const existingEmail = await User.findOne({ email: email.toLowerCase().trim(), isVerified: true });
+      if (existingEmail) {
+        errors.email = 'This email is already registered with another account';
+      }
+    }
+
+    if (collegeId) {
+      const existingCollegeId = await User.findOne({ collegeId, isVerified: true });
+      if (existingCollegeId) {
+        errors.collegeId = 'This College ID is already registered with another account';
+      }
+    }
+
+    if (Object.keys(errors).length > 0) {
+      return res.status(400).json({ success: false, errors });
+    }
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Check signup error:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
 // POST /api/auth/otp/send
 router.post('/otp/send', async (req, res) => {
   try {
@@ -379,13 +411,7 @@ router.post('/otp/verify', async (req, res) => {
         }
       }
 
-      // Check for duplicate In-Game ID
-      if (userData.inGameId) {
-        const existingInGameId = await User.findOne({ inGameId: userData.inGameId });
-        if (existingInGameId && existingInGameId._id.toString() !== user._id.toString()) {
-          return res.status(400).json({ success: false, message: 'In-Game ID already registered with another account' });
-        }
-      }
+      // In-Game ID uniqueness check removed - only email and collegeId need to be unique
 
       // Fallback for username
       const finalUsername = userData.username || userData.inGameName || identifier.split('@')[0];

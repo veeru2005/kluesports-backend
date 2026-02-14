@@ -79,7 +79,7 @@ const valorantPlayerSchema = {
 const teamLeadSchema = {
     name: { type: String, required: true, trim: true },
     collegeId: { type: String, required: true, trim: true },
-    discordId: { type: String, required: true, trim: true },
+    discordId: { type: String, trim: true },
     mobileNumber: { type: String, required: true, trim: true },
     email: { type: String, required: true, trim: true, lowercase: true },
     inGameName: { type: String, trim: true }
@@ -89,7 +89,7 @@ const teamLeadSchema = {
 const valorantTeamLeadSchema = {
     name: { type: String, required: true, trim: true },
     collegeId: { type: String, required: true, trim: true },
-    discordId: { type: String, required: true, trim: true },
+    discordId: { type: String, trim: true },
     mobileNumber: { type: String, required: true, trim: true },
     email: { type: String, required: true, trim: true, lowercase: true },
     riotId: { type: String, required: true, trim: true },
