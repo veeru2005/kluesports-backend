@@ -110,7 +110,7 @@ const getRichEmailTemplate = (title, message, otp, footerNote = "This code expir
           <!-- HEADER -->
           <tr>
             <td class="header-cell" align="center" style="padding:30px 30px 45px 30px;border-bottom:2px solid #dc2626 !important;background-color:#121212 !important; background-image: linear-gradient(#121212, #121212) !important;">
-              <img class="logo-img" src="https://res.cloudinary.com/dus3luhur/image/upload/v1769977067/Logo1_xdqj6d.png" width="80" height="80" alt="KLU ESPORTS" style="display:block;border-radius:50%;border:2px solid #dc2626 !important;margin:0 auto 20px auto;">
+              <img class="logo-img" src="https://res.cloudinary.com/djzocjzl7/image/upload/v1772465624/Logo1_kbdvpg.png" width="80" height="80" alt="KLU ESPORTS" style="display:block;border-radius:50%;border:2px solid #dc2626 !important;margin:0 auto 20px auto;">
               <h1 class="title-text" style="margin:0;font-size:24px;letter-spacing:1px;color:#d1d1d1 !important;">
                 <span class="ios-white" style="color:#d1d1d1 !important;-webkit-text-fill-color: #d1d1d1 !important;font-weight: 900 !important;">KLU</span> <span style="color:#dc2626 !important;-webkit-text-fill-color: #dc2626 !important;font-weight: 900 !important;">ESPORTS</span>
               </h1>

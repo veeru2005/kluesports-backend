@@ -59,7 +59,7 @@ const generateContactEmailHTML = (name, email, subject, message) => {
           
           <tr>
             <td align="center" style="padding:30px;border-bottom:2px solid #dc2626 !important;background-color:#121212 !important; background-image: linear-gradient(#121212, #121212) !important;">
-              <img src="https://res.cloudinary.com/dus3luhur/image/upload/v1769977067/Logo1_xdqj6d.png" width="80" height="80" alt="KLU Esports" style="display:block;border-radius:50%;border:2px solid #dc2626 !important;margin-bottom:15px;">
+              <img src="https://res.cloudinary.com/djzocjzl7/image/upload/v1772465624/Logo1_kbdvpg.png" width="80" height="80" alt="KLU Esports" style="display:block;border-radius:50%;border:2px solid #dc2626 !important;margin-bottom:15px;">
               <h1 class="ios-white" style="margin:0;font-size:24px;letter-spacing:1px;color:#d1d1d1 !important;-webkit-text-fill-color: #d1d1d1 !important;font-weight: 900 !important;">
                 KLU <span style="color:#dc2626 !important;-webkit-text-fill-color: #dc2626 !important;">ESPORTS</span>
               </h1>
@@ -190,7 +190,7 @@ const generateConfirmationEmailHTML = (name) => {
                     
                     <tr>
                         <td align="center" style="padding:30px;background-color:#121212 !important; background-image: linear-gradient(#121212, #121212) !important;border-bottom:2px solid #dc2626 !important;">
-                            <img src="https://res.cloudinary.com/dus3luhur/image/upload/v1769977067/Logo1_xdqj6d.png" alt="KLU Esports" style="width:80px;height:80px;border-radius:50%;border:2px solid #dc2626 !important;margin-bottom:15px;display:block;">
+                            <img src="https://res.cloudinary.com/djzocjzl7/image/upload/v1772465624/Logo1_kbdvpg.png" alt="KLU Esports" style="width:80px;height:80px;border-radius:50%;border:2px solid #dc2626 !important;margin-bottom:15px;display:block;">
                             <h1 class="ios-white" style="color:#d1d1d1 !important;-webkit-text-fill-color: #d1d1d1 !important;font-size:24px;font-weight:900 !important;margin:0;text-transform:uppercase;letter-spacing:1px;">KLU <span style="color:#dc2626 !important;-webkit-text-fill-color: #dc2626 !important;">Esports</span></h1>
                         </td>
                     </tr>
