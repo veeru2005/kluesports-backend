@@ -34,6 +34,7 @@ const messageRoutes = require('./routes/messages');
 const userRoutes = require('./routes/users');
 const uploadRoutes = require('./routes/upload');
 const registrationRoutes = require('./routes/registrations');
+const startReminderScheduler = require('./utils/reminderScheduler');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/events', eventRoutes);
@@ -48,4 +49,5 @@ app.get('/', (req, res) => {
 
 app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
+    startReminderScheduler();
 });
