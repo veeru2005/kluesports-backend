@@ -1,6 +1,5 @@
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const mongoSanitize = require('express-mongo-sanitize');
 
 // ─── Helmet: Secure HTTP Headers ────────────────────────────────────────────
 const helmetMiddleware = helmet({
@@ -95,16 +94,26 @@ const uploadLimiter = rateLimit({
     legacyHeaders: false,
 });
 
-// ─── NoSQL Injection Prevention ─────────────────────────────────────────────
-const sanitizeMongo = mongoSanitize({
-    replaceWith: '_',
-    onSanitize: ({ req, key }) => {
-        console.warn(`⚠️  Sanitized NoSQL injection attempt on ${key} from IP: ${req.ip}`);
-    },
-});
+// ─── NoSQL Injection Prevention (Express 5 compatible) ──────────────────────
+// Custom sanitizer since express-mongo-sanitize sets req.query (read-only in Express 5)
+function sanitizeValue(val) {
+    if (val instanceof Object) {
+        for (const key in val) {
+            if (/^\$/.test(key)) {
+                delete val[key];
+            } else {
+                sanitizeValue(val[key]);
+            }
+        }
+    }
+    return val;
+}
 
-
-
+const sanitizeMongo = (req, res, next) => {
+    if (req.body) sanitizeValue(req.body);
+    if (req.params) sanitizeValue(req.params);
+    next();
+};
 // ─── Global Error Handler ───────────────────────────────────────────────────
 const globalErrorHandler = (err, req, res, next) => {
     console.error('❌ Unhandled Error:', err.message);
