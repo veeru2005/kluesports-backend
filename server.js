@@ -18,7 +18,6 @@ const {
     registrationLimiter,
     uploadLimiter,
     sanitizeMongo,
-    hppMiddleware,
     globalErrorHandler,
     notFoundHandler,
 } = require('./middleware/securityMiddleware');
@@ -54,9 +53,6 @@ app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 
 // NoSQL injection prevention
 app.use(sanitizeMongo);
-
-// HTTP Parameter Pollution protection
-app.use(hppMiddleware);
 
 // ─── Database ───────────────────────────────────────────────────────────────
 mongoose.connect(process.env.MONGO_URI)

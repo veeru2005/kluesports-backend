@@ -1,7 +1,6 @@
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const mongoSanitize = require('express-mongo-sanitize');
-const hpp = require('hpp');
 
 // ─── Helmet: Secure HTTP Headers ────────────────────────────────────────────
 const helmetMiddleware = helmet({
@@ -104,8 +103,7 @@ const sanitizeMongo = mongoSanitize({
     },
 });
 
-// ─── HTTP Parameter Pollution Protection ────────────────────────────────────
-const hppMiddleware = hpp();
+
 
 // ─── Global Error Handler ───────────────────────────────────────────────────
 const globalErrorHandler = (err, req, res, next) => {
@@ -138,7 +136,7 @@ module.exports = {
     registrationLimiter,
     uploadLimiter,
     sanitizeMongo,
-    hppMiddleware,
+
     globalErrorHandler,
     notFoundHandler,
 };
