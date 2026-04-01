@@ -1,0 +1,70 @@
+name: Deploy Backend to VM
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy Backend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to VM via SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            set -e
+
+            echo "🚀 Starting backend deployment..."
+
+            # Navigate to backend directory
+            cd /root/kluesports-backend
+
+            # Pull latest code
+            echo "📥 Pulling latest code from GitHub..."
+            git fetch origin main
+            git reset --hard origin/main
+
+            # Create .env from GitHub Secrets (never stored in repo)
+            echo "🔐 Writing environment variables..."
+            cat > .env << EOF
+            MONGO_URI=${{ secrets.MONGO_URI }}
+            JWT_SECRET=${{ secrets.JWT_SECRET }}
+            SENDER_EMAIL=${{ secrets.SENDER_EMAIL }}
+            BREVO_API_KEY=${{ secrets.BREVO_API_KEY }}
+            PORT=5005
+            CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }}
+            CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}
+            CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}
+            NODE_ENV=production
+            EOF
+
+            # Remove leading whitespace from .env
+            sed -i 's/^[[:space:]]*//' .env
+
+            # Install production dependencies
+            echo "📦 Installing dependencies..."
+            npm install --omit=dev
+
+            # Restart with PM2
+            echo "🔄 Restarting backend with PM2..."
+            if pm2 describe kluesports-backend > /dev/null 2>&1; then
+              pm2 restart kluesports-backend --update-env
+            else
+              pm2 start server.js --name kluesports-backend --env production
+            fi
+
+            pm2 save
+
+            echo "✅ Backend deployment complete!"
+            echo "📊 PM2 status:"
+            pm2 status

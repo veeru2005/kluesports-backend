@@ -24,6 +24,9 @@ Thumbs.db
 dist/
 build/
 
+# Scripts (local-only VM setup)
+scripts/
+
 # Misc
 *.tmp
 *.temp
