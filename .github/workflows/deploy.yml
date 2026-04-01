@@ -19,7 +19,7 @@ jobs:
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          password: ${{ secrets.SSH_PASSWORD }}
           port: 22
           script: |
             set -e
@@ -34,7 +34,7 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
 
-            # Create .env from GitHub Secrets (never stored in repo)
+            # Create .env from GitHub Secrets
             echo "🔐 Writing environment variables..."
             cat > .env << EOF
             MONGO_URI=${{ secrets.MONGO_URI }}
@@ -66,5 +66,4 @@ jobs:
             pm2 save
 
             echo "✅ Backend deployment complete!"
-            echo "📊 PM2 status:"
             pm2 status
