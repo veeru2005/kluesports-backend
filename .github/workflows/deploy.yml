@@ -27,7 +27,7 @@ jobs:
             echo "🚀 Starting backend deployment..."
 
             # Navigate to backend directory
-            cd /root/kluesports-backend
+            cd /var/www/kluesports/backend
 
             # Pull latest code
             echo "📥 Pulling latest code from GitHub..."
