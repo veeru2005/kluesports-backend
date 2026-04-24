@@ -128,7 +128,7 @@ const generateContactEmailHTML = (name, email, subject, message) => {
                   </a>
               </div>
               <p style="color:#71717a !important;-webkit-text-fill-color: #71717a !important;font-size:12px;margin:15px 0 0 0;padding:0 10px;line-height:1.5;">© 2026 KLU ESPORTS CLUB. All rights reserved.</p>
-              <p style="color:#71717a !important;-webkit-text-fill-color: #71717a !important;font-size:10px;margin:8px 0 0 0;padding:0 10px;line-height:1.5;white-space:nowrap;">Designed and Developed by <span style="color:#dc2626 !important;-webkit-text-fill-color: #dc2626 !important;">S. Veerendra Chowdary</span></p>
+              <p style="color:#71717a !important;-webkit-text-fill-color: #71717a !important;font-size:10px;margin:8px 0 0 0;padding:0 10px;line-height:1.5;white-space:nowrap;">Designed and Developed by <a href="https://www.veerendra-portfolio.in/" target="_blank" style="color:#dc2626 !important;-webkit-text-fill-color: #dc2626 !important;text-decoration:none;">S. Veerendra Chowdary</a></p>
             </td>
           </tr>
 
@@ -239,7 +239,7 @@ const generateConfirmationEmailHTML = (name) => {
                   </a>
               </div>
               <p style="color:#71717a !important;-webkit-text-fill-color: #71717a !important;font-size:12px;margin:15px 0 0 0;padding:0 10px;line-height:1.5;">© 2026 KLU ESPORTS CLUB. All rights reserved.</p>
-              <p style="color:#71717a !important;-webkit-text-fill-color: #71717a !important;font-size:10px;margin:8px 0 0 0;padding:0 10px;line-height:1.5;white-space:nowrap;">Designed and Developed by <span style="color:#dc2626 !important;-webkit-text-fill-color: #dc2626 !important;">S. Veerendra Chowdary</span></p>
+              <p style="color:#71717a !important;-webkit-text-fill-color: #71717a !important;font-size:10px;margin:8px 0 0 0;padding:0 10px;line-height:1.5;white-space:nowrap;">Designed and Developed by <a href="https://www.veerendra-portfolio.in/" target="_blank" style="color:#dc2626 !important;-webkit-text-fill-color: #dc2626 !important;text-decoration:none;">S. Veerendra Chowdary</a></p>
             </td>
                     </tr>
                 </table>

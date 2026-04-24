@@ -148,7 +148,7 @@ const buildRegistrationEmail = (teamLeadName, event, registrationData, game) => 
               <a href="https://www.linkedin.com/company/kl-esports-club" style="margin:0 4px;text-decoration:none;display:inline-block;color:#dc2626;font-size:11px;"><img src="https://cdn-icons-png.flaticon.com/128/174/174857.png" alt="LinkedIn" style="width:13px;height:13px;vertical-align:middle;margin-right:3px;">LinkedIn</a>
             </div>
             <p style="color:#71717a;font-size:11px;margin:10px 0 0;">© 2026 KLU ESPORTS CLUB. All rights reserved.</p>
-            <p style="color:#71717a;font-size:10px;margin:6px 0 0;">Designed and Developed by <span style="color:#dc2626;">S. Veerendra Chowdary</span></p>
+            <p style="color:#71717a;font-size:10px;margin:6px 0 0;">Designed and Developed by <a href="https://www.veerendra-portfolio.in/" target="_blank" style="color:#dc2626;text-decoration:none;">S. Veerendra Chowdary</a></p>
           </td>
         </tr>
 
