@@ -15,7 +15,6 @@ const {
     authLimiter,
     otpLimiter,
     messageLimiter,
-    registrationLimiter,
     uploadLimiter,
     sanitizeMongo,
     globalErrorHandler,
@@ -74,7 +73,7 @@ app.use('/api/events', eventRoutes);
 app.use('/api/messages', messageLimiter, messageRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/upload', uploadLimiter, uploadRoutes);
-app.use('/api/registrations', registrationLimiter, registrationRoutes);
+app.use('/api/registrations', registrationRoutes);
 
 // Health check endpoint
 app.get('/', (req, res) => {

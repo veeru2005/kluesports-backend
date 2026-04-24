@@ -22,73 +22,63 @@ const helmetMiddleware = helmet({
 
 // ─── Rate Limiters ──────────────────────────────────────────────────────────
 
-// Global rate limiter: 100 requests per 15 minutes per IP
+// Global rate limiter: 100 requests per 1 minute per IP
 const globalLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
+    windowMs: 1 * 60 * 1000,
     max: 100,
     message: {
         success: false,
-        message: 'Too many requests from this IP. Please try again after 15 minutes.',
+        message: 'Too many requests from this IP. Please try again after 1 minute.',
     },
     standardHeaders: true,
     legacyHeaders: false,
 });
 
-// Auth routes rate limiter: 10 requests per 15 minutes
+// Auth routes rate limiter: 10 requests per 1 minute
 const authLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
+    windowMs: 1 * 60 * 1000,
     max: 10,
     message: {
         success: false,
-        message: 'Too many authentication attempts. Please try again after 15 minutes.',
+        message: 'Too many authentication attempts. Please try again after 1 minute.',
     },
     standardHeaders: true,
     legacyHeaders: false,
 });
 
-// OTP routes rate limiter: 5 requests per 15 minutes
+// OTP routes rate limiter: 5 requests per 1 minute
 const otpLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
+    windowMs: 1 * 60 * 1000,
     max: 5,
     message: {
         success: false,
-        message: 'Too many OTP requests. Please try again after 15 minutes.',
+        message: 'Too many OTP requests. Please try again after 1 minute.',
     },
     standardHeaders: true,
     legacyHeaders: false,
 });
 
-// Contact/Message rate limiter: 3 requests per 15 minutes
+// Contact/Message rate limiter: 3 requests per 1 minute
 const messageLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
+    windowMs: 1 * 60 * 1000,
     max: 3,
     message: {
         success: false,
-        message: 'Too many messages. Please try again later.',
+        message: 'Too many messages. Please try again after 1 minute.',
     },
     standardHeaders: true,
     legacyHeaders: false,
 });
 
-// Registration rate limiter: 5 requests per 15 minutes
-const registrationLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 5,
-    message: {
-        success: false,
-        message: 'Too many registration attempts. Please try again later.',
-    },
-    standardHeaders: true,
-    legacyHeaders: false,
-});
+// Registration rate limiter: Removed to allow multiple registrations from same IP
 
-// Upload rate limiter: 10 requests per 15 minutes
+// Upload rate limiter: 10 requests per 1 minute
 const uploadLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
+    windowMs: 1 * 60 * 1000,
     max: 10,
     message: {
         success: false,
-        message: 'Too many upload attempts. Please try again later.',
+        message: 'Too many upload attempts. Please try again after 1 minute.',
     },
     standardHeaders: true,
     legacyHeaders: false,
@@ -142,7 +132,6 @@ module.exports = {
     authLimiter,
     otpLimiter,
     messageLimiter,
-    registrationLimiter,
     uploadLimiter,
     sanitizeMongo,
 
